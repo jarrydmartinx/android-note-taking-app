@@ -14,6 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
+import java.util.Date;
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity
 {
 
@@ -28,7 +31,13 @@ public class MainActivity extends AppCompatActivity
 
         /* Just dummy code coz I need a StringArray */
 
-        String[] myStringArray = {"Abacus", "Boris", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson"};
+        String[] myStringArray = {"Abacus", "Boris", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "CatsonAbacusAbacusAbacusAbacusAbacusAbacus", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson"};
+
+        Note myNoteArray[]=new Note[]{
+                new Note("item1", new Date()),
+                new Note("item2", new Date()),
+                new Note("item3",new Date())
+        };
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -53,12 +62,11 @@ public class MainActivity extends AppCompatActivity
 
         /* Constructor for main GridView of note previews */
         GridView noteGridView = (GridView) findViewById(R.id.noteGridView);
-        /* Instantiate ArrayAdapter that liases bw data and GridView */
-        ArrayAdapter<String> noteGridAdapter = new ArrayAdapter<String>(this, R.layout.note_preview, R.id.noteText, myStringArray);
+
+        /* Instantiate NoteAdapter that liases bw data and GridView */
+        NoteAdapter noteGridAdapter = new NoteAdapter(this, R.layout.note_preview, myNoteArray);
         noteGridView.setAdapter(noteGridAdapter);
         noteGridView.setOnItemClickListener(notePreviewClickedListener);
-
-          /* Click handler    id is items id number in container  */
 
 
 

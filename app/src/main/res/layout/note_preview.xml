@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants">
     <TextView
         xmlns:android=
             "http://schemas.android.com/apk/res/android"
         android:id="@+id/noteText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance=
             "?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:layout_alignParentBottom="true"
+        android:text="Note Text"
+        android:layout_below="@+id/noteImage"
         android:layout_centerHorizontal="true">
     </TextView>
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/noteImage"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

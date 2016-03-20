@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by jarryd on 20/03/16.
@@ -13,13 +14,18 @@ import java.io.Serializable;
 public class Note implements Serializable {
 
         /*Declare Note class attributes*/
-        String title;
-        int date_modified;
+        public String note_title;
+        public Date dateModified;
+
+        public Note(){
+            super();
+        }
 
         /* Note Constructor */
-        public Note(String title){
-            this.title = title;
-//            this.date_modified ;
+        public Note(String title, Date date) {
+            super();
+            this.note_title = title;
+            this.dateModified = date;
         }
 
         /* Note load method */
