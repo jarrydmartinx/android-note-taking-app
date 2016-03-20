@@ -17,9 +17,9 @@ public class Note implements Serializable {
         int date_modified;
 
         /* Note Constructor */
-        public Note(.....){
-            this.title = ;
-            this.date_modified ;
+        public Note(String title){
+            this.title = title;
+//            this.date_modified ;
         }
 
         /* Note load method */
