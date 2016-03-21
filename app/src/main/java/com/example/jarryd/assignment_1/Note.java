@@ -1,5 +1,7 @@
 package com.example.jarryd.assignment_1;
 
+import android.media.Image;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,25 +18,35 @@ public class Note implements Serializable {
         /*Declare Note class attributes*/
         public String note_title;
         public Date dateModified;
+        public String image_name;
 
         public Note(){
             super();
         }
 
-        /* Note Constructor */
+        /* Constructor for note without image*/
         public Note(String title, Date date) {
             super();
             this.note_title = title;
             this.dateModified = date;
+            this.image_name = "!no_image!";
         }
+
+        /* Constructor for note with image */
+        public Note(String title, Date date, String image_name) {
+        super();
+        this.note_title = title;
+        this.dateModified = date;
+        this.image_name = image_name;
+    }
 
         /* Note load method */
         static public Note load(String filename) {
-            Note res = null;
+            Note loaded_note = null;
             try {
                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename));
 
-                res = (Note) ois.readObject();
+                loaded_note = (Note) ois.readObject();
             }
             catch(IOException e){
                 e.printStackTrace();
@@ -42,7 +54,7 @@ public class Note implements Serializable {
             catch(ClassNotFoundException e){
                 e.printStackTrace();
             }
-            return res;
+            return loaded_note;
         }
 
         public void save(String filename) {
@@ -57,7 +69,4 @@ public class Note implements Serializable {
             }
         }
 
-        public void readToVoice(){
-            //
-        }
 }

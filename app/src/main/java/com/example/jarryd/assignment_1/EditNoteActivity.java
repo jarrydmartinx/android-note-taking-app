@@ -18,4 +18,10 @@ public class EditNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_note);
     }
 
+    /*  Method to Add photos */
+
+    public void readToVoice(){
+        //
+    }
+
 }

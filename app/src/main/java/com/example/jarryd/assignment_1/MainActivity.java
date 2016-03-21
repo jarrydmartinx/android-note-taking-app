@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity
 
         Note myNoteArray[]=new Note[]{
                 new Note("item1", new Date()),
-                new Note("item2", new Date()),
-                new Note("item3",new Date())
+                new Note("item2", new Date(),"tibetan.jpg"),
+                new Note("item3",new Date(),"john.jpg")
         };
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
