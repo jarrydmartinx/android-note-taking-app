@@ -35,8 +35,37 @@ public class MainActivity extends AppCompatActivity
 
         Note myNoteArray[]=new Note[]{
                 new Note("item1", new Date()),
-                new Note("item2 this is some longer text to see how it copes you know, should be fine hopefully now that mastiff is gone", new Date(),"john"),
-                new Note("item3",new Date(),"john")
+                new Note("item2 this is some longer text to see how it copes you know, should be fine hopefully now that mastiff is gone", new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date()),
+                new Note("item3",new Date())
         };
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
