@@ -5,22 +5,31 @@
     <TextView
         xmlns:android=
             "http://schemas.android.com/apk/res/android"
-        android:id="@+id/noteText"
+        android:id="@+id/noteTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textAppearance=
-            "?android:attr/textAppearanceLarge"
+            "?android:attr/textAppearanceMedium"
         android:text="Note Text"
-        android:layout_below="@+id/noteImage"
-        android:layout_centerHorizontal="true">
+        android:layout_below="@+id/noteImageView"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:background="@color/lavender">
     </TextView>
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/noteImage"
+        android:layout_height="match_parent"
+        android:id="@+id/noteImageView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+        android:paddingLeft ="10dp"
+        android:paddingRight = "10dp"
+        android:background="@color/lavender">
     </ImageView>
 
 </RelativeLayout>

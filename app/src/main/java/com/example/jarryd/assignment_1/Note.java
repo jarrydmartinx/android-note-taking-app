@@ -29,7 +29,7 @@ public class Note implements Serializable {
             super();
             this.note_title = title;
             this.dateModified = date;
-            this.image_name = "!no_image!";
+            this.image_name = "!NO_IMAGE!";
         }
 
         /* Constructor for note with image */

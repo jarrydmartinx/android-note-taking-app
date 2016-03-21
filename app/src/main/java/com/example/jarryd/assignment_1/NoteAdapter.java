@@ -3,6 +3,7 @@ package com.example.jarryd.assignment_1;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,29 +27,37 @@ public class NoteAdapter extends ArrayAdapter<Note> {
         this.noteArray = array;
     }
 
+    public static class ViewHolder {
+        public TextView noteTextView;
+        public ImageView noteImageView;
+    }
+
     @Override
     public View getView(int index, View convertView, ViewGroup parent) {
+        View notePreview;
 
-        /* Inflate (render) the layout file */
-        LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-        View notePreview = inflater.inflate(layout_id, parent, false);
-
-        /* Instantiate the View objects for each note preview */
-        TextView noteText = (TextView) notePreview.findViewById(R.id.noteText);
-        ImageView noteImage = (ImageView) notePreview.findViewById(R.id.noteImage);
+        if (convertView == null) {
+            ViewHolder holder;
 
 
-        /* get data from the noteArray to set Text for each Note Preview */
-        noteText.setText((CharSequence) noteArray[index].note_title);
+            /* Inflate (render) the layout file */
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+            notePreview = inflater.inflate(layout_id, parent, false);
 
-        /* get data from the noteArray to set Image for each Note Preview */
-      //  int image_res_id = context.getResources().getIdentifier(noteArray[index].image_name,"drawable",context.getPackageName());
-        // String image_reference = "R.drawable." + noteArray[index].image_name;
-        Path path = Paths.get(image_reference)
-        int image_res_id = R.drawable.john;
-        noteImage.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), image_res_id, null));
+            // Instantiate ViewHolder to hold XML elements of notePreview
+            holder = new ViewHolder();
+            holder.noteTextView = (TextView) notePreview.findViewById(R.id.noteTextView);
+            holder.noteImageView = (ImageView) notePreview.findViewById(R.id.noteImageView);
 
+            /* get data from the noteArray to set Text for each Note Preview */
+            holder.noteTextView.setText((CharSequence) noteArray[index].note_title);
 
+            /* get data from the noteArray to set Image for each Note Preview */
+            int image_res_id = context.getResources().getIdentifier(noteArray[index].image_name, "drawable", context.getPackageName());
+            holder.noteImageView.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), image_res_id, null));
+        } else {
+            notePreview = convertView;
+        }
 
         return notePreview;
     }
