@@ -14,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.Date;
 import java.util.Calendar;
 
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,14 +33,21 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Restore array of Note Titles from Shared preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        boolean silent = settings.getBoolean("silentMode", false);
+        setSilent(silent);
+
+
+
         /* Just dummy code coz I need a StringArray */
 
         String[] myStringArray = {"Abacus", "Boris", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "CatsonAbacusAbacusAbacusAbacusAbacusAbacus", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson"};
 
-        Note myNoteArray[]=new Note[]{
+        final Note myNoteArray[]=new Note[]{
                 new Note("item1", new Date()),
                 new Note("item2 this is some longer text to see how it copes you know, should be fine hopefully now that mastiff is gone", new Date()),
-                new Note("item3",new Date()),
+                new Note("item3",new Date(),"john"),
                 new Note("item3",new Date()),
                 new Note("item3",new Date()),
                 new Note("item3",new Date()),
@@ -81,6 +92,13 @@ public class MainActivity extends AppCompatActivity
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
+                Bundle noteBundle = new Bundle();
+                String note_title = myNoteArray[position].note_title +"_"+myNoteArray[position].dateModified;
+                noteBundle.putSerializable();
+
+
+                String note_title = myNoteArray[position].note_title;
+                launchEditNoteIntent.putExtra(getPackageName()+"."+note_title,note_title);
                 startActivity(launchEditNoteIntent);
             }
 

@@ -1,13 +1,17 @@
 package com.example.jarryd.assignment_1;
 
+import android.content.Context;
 import android.media.Image;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -17,8 +21,9 @@ public class Note implements Serializable {
 
         /*Declare Note class attributes*/
         public String note_title;
-        public Date dateModified;
+        public String timeStamp;
         public String image_name;
+
 
         public Note(){
             super();
@@ -28,9 +33,12 @@ public class Note implements Serializable {
         public Note(String title, Date date) {
             super();
             this.note_title = title;
-            this.dateModified = date;
+            this.timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             this.image_name = "!NO_IMAGE!";
         }
+
+
+
 
         /* Constructor for note with image */
         public Note(String title, Date date, String image_name) {
@@ -40,12 +48,13 @@ public class Note implements Serializable {
         this.image_name = image_name;
     }
 
+
+
         /* Note load method */
-        static public Note load(String filename) {
+        static public Note loadNoteFromFile(File file) {
             Note loaded_note = null;
             try {
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename));
-
+                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
                 loaded_note = (Note) ois.readObject();
             }
             catch(IOException e){
@@ -57,9 +66,10 @@ public class Note implements Serializable {
             return loaded_note;
         }
 
-        public void save(String filename) {
+        public void saveNoteToFile() {
             try {
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename));
+                String noteFileName = "NOTE_" + timeStamp + "_";
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(noteFileName));
 
                 oos.writeObject(this);
                 oos.close();
@@ -69,4 +79,20 @@ public class Note implements Serializable {
             }
         }
 
+
+        public static Note[] loadAllNotesFromDir(File directory) {
+
+            FilenameFilter noteFilter = new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.startsWith("NOTE_");
+                }
+            };
+
+            File[] fileList = directory.listFiles(noteFilter);
+            Note[] noteArray = new Note[fileList.length];
+            for (int i = 0; i < fileList.length; i++) {
+                noteArray[i] = loadNoteFromFile(fileList[i]);
+            }
+            return noteArray;
+        }
 }
