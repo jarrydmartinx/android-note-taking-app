@@ -48,7 +48,11 @@ public class Note implements Serializable {
         this.image_name = image_name;
     }
 
+        public static void setNoteTitle() {
+            String upToNCharacters = s.substring(0, Math.min(s.length(), n));
 
+
+        }
 
         /* Note load method */
         static public Note loadNoteFromFile(File file) {

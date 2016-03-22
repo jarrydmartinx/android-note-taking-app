@@ -24,8 +24,6 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,18 +31,18 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Restore array of Note Titles from Shared preferences
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        boolean silent = settings.getBoolean("silentMode", false);
-        setSilent(silent);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
-
-
-        /* Just dummy code coz I need a StringArray */
-
-        String[] myStringArray = {"Abacus", "Boris", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "CatsonAbacusAbacusAbacusAbacusAbacusAbacus", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson", "Catson"};
-
-        final Note myNoteArray[]=new Note[]{
+        /* Load all notes into an Array to back the NoteAdapter */
+        Note[] noteArray = Note.loadAllNotesFromDir(getFilesDir());
+/*        Note[] noteArray = new Note[]{
                 new Note("item1", new Date()),
                 new Note("item2 this is some longer text to see how it copes you know, should be fine hopefully now that mastiff is gone", new Date()),
                 new Note("item3",new Date(),"john"),
@@ -78,24 +76,16 @@ public class MainActivity extends AppCompatActivity
                 new Note("item3",new Date()),
                 new Note("item3",new Date())
         };
+*/
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         /* Click listener for responding to notePreview click, for launching EditNoteActivity */
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
                 Bundle noteBundle = new Bundle();
-                String note_title = myNoteArray[position].note_title +"_"+myNoteArray[position].dateModified;
+                String note_title = noteArray[position].note_title +"_"+noteArray[position].dateModified;
                 noteBundle.putSerializable();
-
 
                 String note_title = myNoteArray[position].note_title;
                 launchEditNoteIntent.putExtra(getPackageName()+"."+note_title,note_title);
@@ -107,7 +97,7 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        /* Constructor for main GridView of note previews */
+        /* Instantiate the main GridView Object that displays note previews*/
         GridView noteGridView = (GridView) findViewById(R.id.noteGridView);
 
         /* Instantiate NoteAdapter that liases bw data and GridView */
