@@ -19,39 +19,33 @@ import java.util.Date;
  */
 public class Note implements Serializable {
 
-        /*Declare Note class attributes*/
-        public String note_title;
-        public String timeStamp;
-        public String image_name;
+    /*Declare Note class attributes*/
+    public String note_id;
+    public String image_id;
+    public String note_text;
+    public String note_head;
 
-
+        /* Constructor for new note */
         public Note(){
             super();
+            note_id = new SimpleDateFormat("NOTE_yyyy-MM-dd-HH-mm-ss_").format(new Date());;
+            image_id = null;
+            note_text = "";
+            note_head = "Blank Note";
         }
 
-        /* Constructor for note without image*/
-        public Note(String title, Date date) {
+        /* Constructor for existing note */
+        public Note(String note_id, String image_id,String note_text) {
             super();
-            this.note_title = title;
-            this.timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            this.image_name = "!NO_IMAGE!";
+            this.note_id = note_id;
+            this.image_id = image_id;
+            this.note_text = note_text;
+            this.note_head = getNoteHead(50);
         }
 
-
-
-
-        /* Constructor for note with image */
-        public Note(String title, Date date, String image_name) {
-        super();
-        this.note_title = title;
-        this.dateModified = date;
-        this.image_name = image_name;
-    }
-
-        public static void setNoteTitle() {
-            String upToNCharacters = s.substring(0, Math.min(s.length(), n));
-
-
+        public String getNoteHead(int head_length) {
+            String note_head = note_text.substring(0, Math.min(note_text.length(),head_length))+"...";
+            return note_head;
         }
 
         /* Note load method */
@@ -69,6 +63,7 @@ public class Note implements Serializable {
             }
             return loaded_note;
         }
+
 
         public void saveNoteToFile() {
             try {
