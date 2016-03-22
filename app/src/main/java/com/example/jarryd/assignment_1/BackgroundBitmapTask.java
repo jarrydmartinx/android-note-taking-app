@@ -33,7 +33,7 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Integer... params) {
             data = params[0];
-            return decodeSampledBitmapFromFile(pathname, 100, 100));
+            return decodeSampledBitmapFromFile(pathname, 100, 100);
         }
 
         // An AsyncTask method. When the background photo processing is completed, the reference is checked the photo is set.

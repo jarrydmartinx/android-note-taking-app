@@ -93,4 +93,3 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
 
 
     }
-}

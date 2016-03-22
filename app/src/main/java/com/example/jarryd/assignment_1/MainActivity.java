@@ -83,12 +83,12 @@ public class MainActivity extends AppCompatActivity
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
-                Bundle noteBundle = new Bundle();
-                String note_title = noteArray[position].note_title +"_"+noteArray[position].dateModified;
-                noteBundle.putSerializable();
+//                Bundle noteBundle = new Bundle();
+//                String note_title = noteArray[position].note_title +"_"+noteArray[position].dateModified;
+//                noteBundle.putSerializable();
 
-                String note_title = myNoteArray[position].note_title;
-                launchEditNoteIntent.putExtra(getPackageName()+"."+note_title,note_title);
+//                String note_title = myNoteArray[position].note_title;
+//                launchEditNoteIntent.putExtra(getPackageName()+"."+note_title,note_title);
                 startActivity(launchEditNoteIntent);
             }
 
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity
         GridView noteGridView = (GridView) findViewById(R.id.noteGridView);
 
         /* Instantiate NoteAdapter that liases bw data and GridView */
-        NoteAdapter noteGridAdapter = new NoteAdapter(this, R.layout.note_preview, myNoteArray);
+        NoteAdapter noteGridAdapter = new NoteAdapter(this, R.layout.note_preview, noteArray);
         noteGridView.setAdapter(noteGridAdapter);
         noteGridView.setOnItemClickListener(notePreviewClickedListener);
 
