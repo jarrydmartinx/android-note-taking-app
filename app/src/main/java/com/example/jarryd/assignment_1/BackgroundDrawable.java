@@ -16,7 +16,7 @@ public class BackgroundDrawable extends BitmapDrawable {
 
     public BackgroundDrawable(Resources resources, Bitmap photo, BackgroundBitmapTask backgroundBitmapTask) {
         super(resources, photo);
-        backgroundBitmapTaskWeakRef = new WeakReference<BackgroundBitmapTask>(backgroundBitmapTask);
+        backgroundBitmapTaskWeakRef = new WeakReference<>(backgroundBitmapTask);
     }
 
     public BackgroundBitmapTask getBackgroundBitmapTask() {

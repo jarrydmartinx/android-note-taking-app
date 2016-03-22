@@ -20,10 +20,13 @@ import java.lang.ref.WeakReference;
 public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
         private final WeakReference<ImageView> noteImageViewRef;
         private int data = 0;
+        private String pathname;
 
-        public BackgroundBitmapTask(ImageView noteImageView, String pathname HERE YOURE NOT SURE WHAT TO DO) {
+        public BackgroundBitmapTask(ImageView noteImageView, String pathname) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             noteImageViewRef = new WeakReference<>(noteImageView);
+            this.pathname = pathname;
+
         }
 
         // An AsyncTask method. Process the photo in a background thread rather than the UI thread
@@ -116,22 +119,6 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(pathname, options);
     }
-
-//    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-//                                                         int reqWidth, int reqHeight) {
-//
-//        // First decode with inJustDecodeBounds=true to check dimensions
-//        final BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inJustDecodeBounds = true;
-//        BitmapFactory.decodeResource(res, resId, options);
-//
-//        // Calculate inSampleSize
-//        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-//
-//        // Decode bitmap with inSampleSize set
-//        options.inJustDecodeBounds = false;
-//        return BitmapFactory.decodeResource(res, resId, options);
-//    }
 
 }
 

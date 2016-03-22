@@ -28,7 +28,7 @@ public class Note implements Serializable {
         /* Constructor for new note */
         public Note(){
             super();
-            note_id = new SimpleDateFormat("NOTE_yyyy-MM-dd-HH-mm-ss_").format(new Date());;
+            note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());;
             image_id = null;
             note_text = "";
             note_head = "Blank Note";
@@ -67,7 +67,7 @@ public class Note implements Serializable {
 
         public void saveNoteToFile() {
             try {
-                String noteFileName = "NOTE_" + timeStamp + "_";
+                String noteFileName = "NOTE_" + note_id + "_";
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(noteFileName));
 
                 oos.writeObject(this);
