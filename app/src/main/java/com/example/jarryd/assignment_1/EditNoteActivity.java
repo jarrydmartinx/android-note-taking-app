@@ -22,13 +22,13 @@ public class EditNoteActivity extends AppCompatActivity {
     TextView noteText;
     ImageView noteImage;
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_edit_note);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_note);
 //        Note.load()
-//    }
-//
+    }
+
 //    /* Instantiate widgets*/
 //        noteText = (TextView) findViewById(R.id.note_text);
 //        noteImage = (ImageView) findViewById(R.id.note_image);

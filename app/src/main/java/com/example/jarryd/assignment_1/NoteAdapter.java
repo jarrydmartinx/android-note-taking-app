@@ -48,9 +48,6 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
 
         @Override
         public View getView(int index, View convertView, ViewGroup parent) {
-
-
-
             /* Declare a ViewHolder object that will hold all the View objects for the Note */
             ViewHolder holder;
 
@@ -67,15 +64,17 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
                 holder = (ViewHolder) convertView.getTag(); //Still not totally clear on the Tags
             }
 
-         /* get data from the noteArray to set Text for each Note Preview */
+         /* get data from the noteArray to set text for each Note Preview to  note_head */
 
-            holder.textView.setText(noteArray[index].note_text);
+            holder.textView.setText(noteArray[index].note_head);
 
             /* get data from the noteArray to set Image for each Note Preview */
 
             if (noteArray[index].image_id !=  null) {
                 String image_pathname = context.getFilesDir() + "IMAGE_"+ noteArray[index].image_id + "_";
-                setBitmapViaBackgroundTask(holder.imageView.getId(), image_pathname, holder.imageView);
+
+//              setBitmapViaBackgroundTask(holder.imageView.getId(), image_pathname, holder.imageView);
+//              setBitmapViaBackgroundTask(holder.imageView.getId(), "res/drawable/john.jpg", holder.imageView);
             }
             return convertView;
         }

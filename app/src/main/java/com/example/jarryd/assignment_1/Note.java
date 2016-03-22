@@ -25,14 +25,25 @@ public class Note implements Serializable {
     public String note_text;
     public String note_head;
 
-        /* Constructor for new note */
+        /* Constructor for fake notes */
         public Note(){
             super();
-            note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());;
+            note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
             image_id = null;
             note_text = "";
             note_head = "Blank Note";
         }
+
+        /* Constructor for new note
+        public Note(){
+            super();
+            note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
+            image_id = null;
+            note_text = "";
+            note_head = "Blank Note";
+        }
+        */
+
 
         /* Constructor for existing note */
         public Note(String note_id, String image_id,String note_text) {

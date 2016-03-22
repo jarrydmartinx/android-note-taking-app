@@ -41,42 +41,10 @@ public class MainActivity extends AppCompatActivity
         });
 
         /* Load all notes into an Array to back the NoteAdapter */
-        Note[] noteArray = Note.loadAllNotesFromDir(getFilesDir());
-/*        Note[] noteArray = new Note[]{
-                new Note("item1", new Date()),
-                new Note("item2 this is some longer text to see how it copes you know, should be fine hopefully now that mastiff is gone", new Date()),
-                new Note("item3",new Date(),"john"),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date()),
-                new Note("item3",new Date())
-        };
-*/
+//        Note[] noteArray = Note.loadAllNotesFromDir(getFilesDir());
+        Note[] noteArray = new Note[]{
+                new Note(), new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note()};
+
 
 
         /* Click listener for responding to notePreview click, for launching EditNoteActivity */
