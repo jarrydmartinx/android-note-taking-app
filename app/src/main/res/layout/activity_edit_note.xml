@@ -10,11 +10,12 @@
     tools:context="com.example.jarryd.assignment_1.EditNoteActivity">
 
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/scrollView2"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:background="@color/lavender">
 
 
         <RelativeLayout
@@ -32,22 +33,29 @@
                         "?android:attr/textAppearanceMedium"
                     android:text="Note Text"
                     android:layout_below="@+id/noteImageView"
+                    android:inputType="textMultiLine"
                     android:layout_centerHorizontal="true"
                     android:visibility="visible"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:background="@color/lavender">
+                    android:paddingTop="10dp"
+                    android:background="@color/lavender"
+                    android:backgroundTint="@color/bisque"
+                    android:backgroundTintMode="multiply"
+                    android:hapticFeedbackEnabled="true">
+
                 </EditText>
 
                 <com.example.jarryd.assignment_1.myImageView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/noteImageView"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:visibility="visible"
                     android:paddingLeft ="10dp"
                     android:paddingRight = "10dp"
+                    android:layout_marginBottom="30dp"
                     android:adjustViewBounds="false"
                     android:background="@color/lavender">
                 </com.example.jarryd.assignment_1.myImageView>
@@ -64,7 +72,9 @@
         android:src="@drawable/ic_camera_alt_24dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-
+        android:hapticFeedbackEnabled="true"
         android:layout_alignParentEnd="true" />
+
+
 
 </RelativeLayout>
