@@ -20,7 +20,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
     /* Declare widget objects */
     TextView noteText;
-    ImageView noteImage;
+    myImageView noteImage;
     Note note;
 
     @Override
@@ -28,45 +28,39 @@ public class EditNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
 
-
+    /* Get Intent Message */
         Intent editNoteIntent = getIntent();
-        String message = editNoteIntent.getStringExtra(this.getString(R.string.edit_note_intent_message));
-        textDynamic.setText(message);
-
-    }
+        String key = "note_selected";
+        note = (Note) editNoteIntent.getExtras().getSerializable(key);
 
     /* Instantiate widgets*/
-        noteText = (TextView) findViewById(R.id.note_text);
-        noteImage = (ImageView) findViewById(R.id.note_image);
+        noteText = (TextView) findViewById(R.id.noteEditText);
+        noteImage = (myImageView) findViewById(R.id.noteImageView);
 
-     /* Get Intent Message */
-        Intent editNoteIntent = getIntent();
-        note = editNoteIntent.getSerializableExtra(this.getString(R.string.edit_note_intent_message));
-        textDynamic.setText(message);
-
-
-
+        noteText.setText(note.note_text);
+        noteImage.setBitmapViaBackgroundTaskFromResource(R.drawable.john);
+    }
     /*  Method to Add photos */
 
-    String photoPath;
+//    String photoPath;
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String photoFileName = "JPEG_" + timeStamp + "_";
-
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
-    }
+//    private File createImageFile() throws IOException {
+//        // Create an image file name
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String photoFileName = "JPEG_" + timeStamp + "_";
+//
+//        File storageDir = Environment.getExternalStoragePublicDirectory(
+//                Environment.DIRECTORY_PICTURES);
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+//
+//        // Save a file: path for use with ACTION_VIEW intents
+//        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+//        return image;
+//    }
 
 
 

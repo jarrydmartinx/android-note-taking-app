@@ -25,12 +25,12 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
         private int resId;
         private Context context;
 
-//        public BackgroundBitmapTask(ImageView noteImageView, String pathname) {
-//            // Use a WeakReference to ensure the ImageView can be garbage collected
-//            noteImageViewRef = new WeakReference<>(noteImageView);
-//            this.pathname = pathname;
-//
-//        }
+        public BackgroundBitmapTask(ImageView noteImageView, String pathname) {
+            // Use a WeakReference to ensure the ImageView can be garbage collected
+            noteImageViewRef = new WeakReference<>(noteImageView);
+            this.pathname = pathname;
+
+        }
 
         // Constructor for testing, takes a resource id rather than a pathname
         public BackgroundBitmapTask(ImageView noteImageView, int resId, Context context) {

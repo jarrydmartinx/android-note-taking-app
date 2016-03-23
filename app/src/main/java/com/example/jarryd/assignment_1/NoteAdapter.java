@@ -35,7 +35,7 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
 
         private static class ViewHolder {
             protected TextView textView;
-            protected ImageView imageView;
+            protected myImageView imageView;
         }
 
         public NoteAdapter(Context context, int layout_id, Note[] noteArray) {
@@ -50,7 +50,7 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
             /* Declare a ViewHolder object that will hold all the View objects for the Note */
             ViewHolder holder;
             View notePreview = convertView;
-            System.out.println("getView called, convertView="+convertView);
+
             /* Check that a usable View object doesn't already exist */
             if (notePreview == null) {
             /* Inflate (render) the layout file */
@@ -58,7 +58,7 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
                     notePreview = inflater.inflate(layout_id, parent, false);
                     holder = new ViewHolder();
                     holder.textView = (TextView) notePreview.findViewById(R.id.noteTextView);
-                    holder.imageView = (ImageView) notePreview.findViewById(R.id.noteImageView);
+                    holder.imageView = (myImageView) notePreview.findViewById(R.id.noteImageView);
                     notePreview.setTag(holder);
             } else {
                 holder = (ViewHolder) notePreview.getTag(); //Still not totally clear on the Tags
@@ -73,33 +73,15 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
 //            if (noteArray[index].image_id !=  null) {
 //                String image_pathname = context.getFilesDir() + "IMAGE_" + noteArray[index].image_id + "_";
 //              setBitmapViaBackgroundTask(holder.imageView.getId(), image_pathname, holder.imageView);
-              setBitmapViaBackgroundTaskFromResource(holder.imageView.getId(), R.drawable.john, holder.imageView);
+              holder.imageView.setBitmapViaBackgroundTaskFromResource(R.drawable.john);
 
 //            }
             return notePreview;
         }
 
-//        public void setBitmapViaBackgroundTask(int resId, String image_pathname, ImageView imageView) {
-//            if (cancelExistingBackgroundTask(resId, imageView)) {
-//                final BackgroundBitmapTask bgBmpTask = new BackgroundBitmapTask(imageView, image_pathname);
-//                final BackgroundDrawable bgDrawable = new BackgroundDrawable(context.getResources(), null, bgBmpTask);
-//                /* Set the drawable object as the content of this imageView */
-//                imageView.setImageDrawable(bgDrawable);
-//                /* Execute Bitmap Processing in the background thread */
-//                bgBmpTask.execute(resId);
-//            }
-//        }
 
-    public void setBitmapViaBackgroundTaskFromResource(int resId, int image_id, ImageView imageView) {
-        if (cancelExistingBackgroundTask(resId, imageView)) {
-            final BackgroundBitmapTask bgBmpTask = new BackgroundBitmapTask(imageView, image_id, context);
-            final BackgroundDrawable bgDrawable = new BackgroundDrawable(context.getResources(), null, bgBmpTask);
-                /* Set the drawable object as the content of this imageView */
-            imageView.setImageDrawable(bgDrawable);
-                /* Execute Bitmap Processing in the background thread */
-            bgBmpTask.execute(resId);
-        }
-    }
+
+
 
 
     }

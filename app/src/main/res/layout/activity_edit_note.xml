@@ -16,15 +16,16 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true">
 
-                <TextView
+            <EditText
                     xmlns:android=
                         "http://schemas.android.com/apk/res/android"
-                    android:id="@+id/noteTextView"
+                    android:id="@+id/noteEditText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textAppearance=
@@ -36,9 +37,9 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:background="@color/lavender">
-                </TextView>
+                </EditText>
 
-                <ImageView
+                <com.example.jarryd.assignment_1.myImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/noteImageView"
@@ -49,10 +50,21 @@
                     android:paddingRight = "10dp"
                     android:adjustViewBounds="false"
                     android:background="@color/lavender">
-                </ImageView>
+                </com.example.jarryd.assignment_1.myImageView>
 
         </RelativeLayout>
 
     </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_camera_alt_24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

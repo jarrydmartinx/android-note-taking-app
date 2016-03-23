@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants">
@@ -21,7 +20,7 @@
         android:background="@color/lavender">
     </TextView>
 
-    <ImageView
+    <com.example.jarryd.assignment_1.myImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/noteImageView"
@@ -32,6 +31,6 @@
         android:paddingRight = "10dp"
         android:adjustViewBounds="false"
         android:background="@color/lavender">
-    </ImageView>
+    </com.example.jarryd.assignment_1.myImageView>
 
 </RelativeLayout>
