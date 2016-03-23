@@ -55,7 +55,7 @@
         <color name="violet">#EE82EE</color>
         <color name="darksalmon">#E9967A</color>
         <color name="lavender">#E6E6FA</color>
-        <color name="lightcyan">#E0FFFF</color>
+        <color name="lightcyan">#e0ffea</color>
         <color name="burlywood">#DEB887</color>
         <color name="plum">#DDA0DD</color>
         <color name="gainsboro">#DCDCDC</color>
@@ -114,7 +114,7 @@
         <color name="cornflowerblue">#6495ED</color>
         <color name="cadetblue">#5F9EA0</color>
         <color name="darkolivegreen">#556B2F</color>
-        <color name="indigo">#4B0082</color>
+        <color name="indigo">#4b0082</color>
         <color name="mediumturquoise">#48D1CC</color>
         <color name="darkslateblue">#483D8B</color>
         <color name="steelblue">#4682B4</color>
