@@ -48,6 +48,8 @@
                 android:textIsSelectable="true"
                 android:minLines="5"
                 android:nestedScrollingEnabled="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 >
             </EditText>
 

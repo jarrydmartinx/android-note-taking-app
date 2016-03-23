@@ -1,5 +1,6 @@
 package com.example.jarryd.assignment_1;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,14 +17,15 @@ import android.widget.GridView;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity
 {
-
+    private static final Context context = g;
     private static final String TAG = "MainActivity";
-    public Note[] noteArray;
+    public ArrayList<Note> noteArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +43,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        noteArray = new Note[20];
+        noteArray = new ArrayList();
         for (int i=0;i<20;i++) {
-            noteArray[i] = new Note();
-            noteArray[i].saveNoteToFile();
+            noteArray.add(new Note());
+//            noteArray[i].saveNoteToFile();
         }
         /* Load all notes into an Array to back the NoteAdapter */
      //  noteArray = Note.loadAllNotesFromDir(getFilesDir());
@@ -52,11 +54,11 @@ public class MainActivity extends AppCompatActivity
 
         /* Click listener for responding to notePreview click, for launching EditNoteActivity */
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView parent, View view, int position, long id) {
+            public void onItemClick(AdapterView parent, View view, int index, long id) {
                 Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
                 Bundle noteBundle = new Bundle();
                 String key = "note_selected";
-                noteBundle.putSerializable(key, noteArray[position]);
+                noteBundle.putSerializable(key, noteArray.get(index));
 
                 launchEditNoteIntent.putExtras(noteBundle);
                 startActivity(launchEditNoteIntent);

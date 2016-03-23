@@ -7,6 +7,7 @@
     <string name="delete_button_title">Delete</string>
     <string name="save_button_title">Save</string>
     <string name="share_button_title">Share</string>
+    <string name="notes_file">NOTE_DATA</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

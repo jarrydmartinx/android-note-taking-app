@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistingBackgroundTask;
 
@@ -28,7 +29,7 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
  */
      public class NoteAdapter extends ArrayAdapter<Note> {
 
-        private Note[] noteArray;
+        private ArrayList<Note> noteArray;
         private final Context context;
         private int layout_id;
 
@@ -38,7 +39,7 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
             protected myImageView imageView;
         }
 
-        public NoteAdapter(Context context, int layout_id, Note[] noteArray) {
+        public NoteAdapter(Context context, int layout_id, ArrayList<Note> noteArray) {
             super(context, layout_id, noteArray);
             this.context = context;
             this.layout_id = layout_id;
@@ -66,7 +67,7 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
 
          /* get data from the noteArray to set text for each Note Preview to  note_head */
 
-            holder.textView.setText(noteArray[index].note_head);
+            holder.textView.setText(noteArray.get(index).note_head);
 
             /* get data from the noteArray to set Image for each Note Preview */
 

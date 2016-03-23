@@ -1,9 +1,11 @@
 package com.example.jarryd.assignment_1;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,6 +42,11 @@ public class EditNoteActivity extends AppCompatActivity {
 
         noteText.setText(note.note_text);
         noteImage.setBitmapViaBackgroundTaskFromResource(R.drawable.john);
+
+        int deviceAPIversion = android.os.Build.VERSION.SDK_INT;
+        if (deviceAPIversion >= Build.VERSION_CODES.LOLLIPOP) {
+            noteText.setShowSoftInputOnFocus(true);
+        }
     }
     /*  Method to Add photos */
 

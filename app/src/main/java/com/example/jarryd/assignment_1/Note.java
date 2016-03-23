@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by jarryd on 20/03/16.
+ * Created by jarryd on 20/03/16. REMEMBER IT DOESN"T NEED TO BE SERIALIZABLE IF YOU USE JSON
  */
 public class Note implements Serializable {
 
@@ -45,21 +45,56 @@ public class Note implements Serializable {
         */
 
 
-        /* Constructor for existing note */
+        /* Constructor for existing note WHAT THE HELL IS THIS SUPPOSED TO BE FOR???*/
         public Note(String note_id, String image_id,String note_text) {
             super();
             this.note_id = note_id;
             this.image_id = image_id;
             this.note_text = note_text;
-            this.note_head = getNoteHead(50);
+            setNote_head();
         }
 
-        public String getNoteHead(int head_length) {
-            String note_head = note_text.substring(0, Math.min(note_text.length(),head_length))+"...";
-            return note_head;
+        public String getNote_id(){
+            return note_id;
         }
 
-        /* Note load method */
+        public String getImage_id(){
+            return image_id;
+        }
+
+        public void setNote_head() {
+            int head_length;
+            if (this.image_id == null){
+                head_length = 60; //MAGIC NUMBERZZZZZZZZZZZZZZZZZZZZZZZZZ
+            } else head_length = 20; //MAGIC NUMBERZZZZZZZZZZZZZZZZZZZZZZZZZ
+
+            this.note_head = note_text.substring(0, Math.min(note_text.length(),head_length))+"...";
+        }
+
+        public void setNote_head(String note_head) {
+            this.note_head = note_head;
+        }
+
+        public void setNote_id(String note_id) {
+            this.note_id = note_id;
+        }
+
+        public void setImage_id(String image_id) {
+            this.image_id = image_id;
+        }
+
+        public void setNote_text(String note_text) {
+            this.note_text = note_text;
+        }
+
+        public void setAll(String note_id, String image_id, String note_text, String note_head){
+            this.note_id = note_id;
+            this.image_id = image_id;
+            this.note_text = note_text;
+            this.note_head = note_head;
+        }
+
+    /* Note load method */
         static public Note loadNoteFromFile(File file) {
             Note loaded_note = null;
             try {
