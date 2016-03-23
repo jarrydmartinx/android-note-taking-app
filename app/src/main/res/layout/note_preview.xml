@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants">
@@ -16,14 +18,12 @@
         android:visibility="visible"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        android:background="@color/lavender"
-        android:lines="2">
+        android:background="@color/lavender">
     </TextView>
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/noteImageView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"

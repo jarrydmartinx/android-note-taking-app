@@ -30,7 +30,7 @@ public class Note implements Serializable {
             super();
             note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
             image_id = null;
-            note_text = "";
+            note_text = "Sample Note Text";
             note_head = "Blank Note";
         }
 
@@ -83,6 +83,7 @@ public class Note implements Serializable {
 
                 oos.writeObject(this);
                 oos.close();
+
             }
             catch (IOException e) {
                 e.printStackTrace();

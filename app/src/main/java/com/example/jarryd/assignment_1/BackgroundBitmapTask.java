@@ -1,5 +1,6 @@
 package com.example.jarryd.assignment_1;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,11 +22,23 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
         private final WeakReference<ImageView> noteImageViewRef;
         private int data = 0;
         private String pathname;
+        private int resId;
+        private Context context;
 
-        public BackgroundBitmapTask(ImageView noteImageView, String pathname) {
-            // Use a WeakReference to ensure the ImageView can be garbage collected
+//        public BackgroundBitmapTask(ImageView noteImageView, String pathname) {
+//            // Use a WeakReference to ensure the ImageView can be garbage collected
+//            noteImageViewRef = new WeakReference<>(noteImageView);
+//            this.pathname = pathname;
+//
+//        }
+
+        // Constructor for testing, takes a resource id rather than a pathname
+        public BackgroundBitmapTask(ImageView noteImageView, int resId, Context context) {
+        // Use a WeakReference to ensure the ImageView can be garbage collected
             noteImageViewRef = new WeakReference<>(noteImageView);
-            this.pathname = pathname;
+            pathname = "no_path";
+            this.resId = resId;
+            this.context = context;
 
         }
 
@@ -33,7 +46,8 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Integer... params) {
             data = params[0];
-            return decodeSampledBitmapFromFile(pathname, 100, 100);
+//            return decodeSampledBitmapFromFile(pathname, 100, 100);
+            return decodeSampledBitmapFromResource(resId, context, 100, 100);
         }
 
         // An AsyncTask method. When the background photo processing is completed, the reference is checked the photo is set.
@@ -118,6 +132,22 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(pathname, options);
+    }
+
+    public static Bitmap decodeSampledBitmapFromResource(int resId, Context context,
+                                                     int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(context.getResources(), resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(context.getResources(), resId, options);
     }
 
 }

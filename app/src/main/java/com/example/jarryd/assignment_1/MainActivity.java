@@ -40,23 +40,24 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        final Note[] noteArray = new Note[20];
+        for (int i=0;i<20;i++) {
+            noteArray[i] = new Note();
+            noteArray[i].saveNoteToFile();
+        }
         /* Load all notes into an Array to back the NoteAdapter */
-//        Note[] noteArray = Note.loadAllNotesFromDir(getFilesDir());
-        Note[] noteArray = new Note[]{
-                new Note(), new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note(),new Note()};
-
+     //   final Note[] noteArray = Note.loadAllNotesFromDir(getFilesDir());
 
 
         /* Click listener for responding to notePreview click, for launching EditNoteActivity */
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
-//                Bundle noteBundle = new Bundle();
-//                String note_title = noteArray[position].note_title +"_"+noteArray[position].dateModified;
-//                noteBundle.putSerializable();
+                Bundle noteBundle = new Bundle();
+                String key = noteArray[position].note_id;
+                noteBundle.putSerializable(key, noteArray[position]);
 
-//                String note_title = myNoteArray[position].note_title;
-//                launchEditNoteIntent.putExtra(getPackageName()+"."+note_title,note_title);
+                launchEditNoteIntent.putExtra(getPackageName()+"."+key,noteBundle);
                 startActivity(launchEditNoteIntent);
             }
 
