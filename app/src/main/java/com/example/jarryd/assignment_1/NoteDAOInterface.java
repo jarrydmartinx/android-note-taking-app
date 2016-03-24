@@ -13,9 +13,12 @@ public interface NoteDAOInterface {
         public ArrayList<Note> getAllSavedNotes(Context context);
 
         public void createNote();
-        public void updateNote(Note note);
+        public void saveNote(Note note);
         public void deleteNote(Note note);
 
         public Note getNotebyId(String note_id);
+        public String getImageId(String note_id);
 
 }
+
+

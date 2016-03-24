@@ -1,6 +1,8 @@
 package com.example.jarryd.assignment_1;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 
@@ -17,8 +19,68 @@ import java.util.ArrayList;
 /**
  * Created by jarryd on 24/03/16. draws on http://developer.android.com/reference/android/util/JsonReader.html, http://developer.android.com/reference/android/util/JsonWriter.html
  */
-public class NoteDAOimpl implements NoteDAOInterface {
-    ArrayList<Note> noteList;
+public class NoteDAOimplSQLite implements NoteDAOInterface {
+    private Context context;
+    private NoteDBHelper = new NoteDBHelper(context);
+
+
+    private static final String TYPE = " TEXT";
+    private static final String SEP = ",";
+    public static final String SQL_CREATE_ENTRIES =
+            "CREATE TABLE " + NoteDBContract.NoteEntry.TABLE_NAME + " (" +
+                    NoteDBContract.NoteEntry._ID + " INTEGER PRIMARY KEY" + SEP +
+                    NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + TYPE + SEP +
+                    NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID + TYPE + SEP +
+                    NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT + TYPE + SEP + " )";
+
+    public static final String SQL_DELETE_ENTRIES =
+            "DROP TABLE IF EXISTS " + NoteDBContract.NoteEntry.TABLE_NAME;
+
+    public NoteDAOimplSQLite(Context context){
+        this.context = context;
+    }
+
+
+
+    // Instantiate the SQLite Database in write mode
+    SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
+
+    // Create a new table of values, column names are the keys
+    ContentValues values = new ContentValues();
+
+    public void createNote();
+    public void saveNote(Note note);
+    public void deleteNote(Note note);
+
+    public Note getNotebyId(String note_id);
+    public String getImageId(String note_id);
+
+
+    public createNote
+    values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID, note_id);
+    values.put(NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID, image_id);
+    values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note_text);
+
+    // Insert the new row, returning the primary key value of the new row
+    long newRowId;
+    newRowId = db.insert(
+    NoteDBContract.NoteEntry.TABLE_NAME,
+    NoteDBContract.NoteEntry.COLUMN_NAME_NULLABLE,
+    values);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public ArrayList<Note> getAllSavedNotes(Context context) {
