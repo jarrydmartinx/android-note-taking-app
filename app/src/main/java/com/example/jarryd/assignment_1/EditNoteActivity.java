@@ -4,15 +4,24 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.IOException;
 
 public class EditNoteActivity extends AppCompatActivity {
 //    private final Context context = getApplicationContext();
@@ -58,8 +67,35 @@ public class EditNoteActivity extends AppCompatActivity {
         if (deviceAPIversion >= Build.VERSION_CODES.LOLLIPOP) {
             noteEditText.setShowSoftInputOnFocus(true);
         }
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePhotoIntent(note.note_id);
+            }
+        });
+
     }
+
+
     /*  Method to Add photos */
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private void dispatchTakePhotoIntent(String note_id) {
+        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePhotoIntent.resolveActivity(getPackageManager()) != null) {
+            String image_filename = "JPEG_IMAGE_" + note_id + "_";
+            File imageFile = new File(getFilesDir(), image_filename);
+
+            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
+            startActivityForResult(takePhotoIntent, REQUEST_IMAGE_CAPTURE);
+        }
+
+    }
+
+
 
 //    String photoPath;
 

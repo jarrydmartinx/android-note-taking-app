@@ -52,13 +52,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Note newNote = new Note();
-                noteDAO.saveNewNoteData(newNote);
-                Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
-                launchEditNoteIntent.putExtra(
-                        context.getString(R.string.selected_note_id),
-                        newNote.getNote_id());
-                startActivity(launchEditNoteIntent);
+                dispatchLaunchEditNewNoteIntent();
             }
         });
 
@@ -73,12 +67,8 @@ public class MainActivity extends AppCompatActivity {
         /* Click listener for responding to notePreview click, for launching EditNoteActivity */
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View view, int position, long id) {
-                Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
-                launchEditNoteIntent.putExtra(
-                        context.getString(R.string.selected_note_id),
-                        noteArray.get(position).getNote_id()
-                );
-                startActivity(launchEditNoteIntent);
+                dispatchLaunchEditNoteIntent(position);
+
             }
 
 //            public void onItemLongClick(AdapterView parent, View view, int position, long id) {
@@ -156,6 +146,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void dispatchLaunchEditNoteIntent(int position) {
+        Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
+        launchEditNoteIntent.putExtra(
+                context.getString(R.string.selected_note_id),
+                noteArray.get(position).getNote_id()
+        );
+        startActivity(launchEditNoteIntent);
+    }
+
+    private void dispatchLaunchEditNewNoteIntent() {
+        Note newNote = new Note();
+        noteDAO.saveNewNoteData(newNote);
+        Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
+        launchEditNoteIntent.putExtra(
+                context.getString(R.string.selected_note_id),
+                newNote.getNote_id());
+        startActivity(launchEditNoteIntent);
     }
 
 
