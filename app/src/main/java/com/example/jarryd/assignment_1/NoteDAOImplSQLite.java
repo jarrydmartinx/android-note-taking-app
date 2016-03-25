@@ -11,8 +11,7 @@ import java.util.ArrayList;
  * Created by jarryd on 24/03/16. draws on http://developer.android.com/reference/android/util/JsonReader.html, http://developer.android.com/reference/android/util/JsonWriter.html
  */
 public class NoteDAOImplSQLite implements NoteDAO {
-    public Context context;
-    private NoteDBHelper noteDBHelper;
+    public NoteDBHelper noteDBHelper;
 
     private static final String TYPE = " TEXT";
     private static final String SEP = ",";
@@ -28,8 +27,7 @@ public class NoteDAOImplSQLite implements NoteDAO {
             "DROP TABLE IF EXISTS " + NoteDBContract.NoteEntry.TABLE_NAME;
 
     public NoteDAOImplSQLite(Context context) {
-        this.context = context;
-        this.noteDBHelper = new NoteDBHelper(context);
+        noteDBHelper = NoteDBHelper.getInstance(context);
     }
 
 
@@ -45,7 +43,7 @@ public class NoteDAOImplSQLite implements NoteDAO {
         values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note.note_text);
 
         noteDB.insert(NoteDBContract.NoteEntry.TABLE_NAME, null, values);
-        noteDB.close();
+        System.out.println("#################new note put in DB: " + values + ", #########################");
     }
 
     @Override
@@ -72,7 +70,7 @@ public class NoteDAOImplSQLite implements NoteDAO {
         note.note_title = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE);
         note.note_text = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT);
         cursor.close();
-        noteDB.close();
+
         return note;
     }
 
@@ -85,15 +83,16 @@ public class NoteDAOImplSQLite implements NoteDAO {
         ContentValues values = new ContentValues();
         values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID, note.getNote_id());
         values.put(NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID, note.getImage_id());
-        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE, note.note_text);
-        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note.note_title);
+        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE, note.note_title);
+        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note.note_text);
 
         // Which row to update, based on the ID
         String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " LIKE ?";
         String[] whereArgs = {note.getNote_id()};
 
         noteDB.update(NoteDBContract.NoteEntry.TABLE_NAME, values, where, whereArgs);
-        noteDB.close();
+        System.out.println("#################note updated in DB: " + values + ", #########################");
+
     }
 
     @Override
@@ -104,18 +103,18 @@ public class NoteDAOImplSQLite implements NoteDAO {
         String[] whereArgs = { note.getNote_id() };
        //SQL delete statement
         noteDB.delete(NoteDBContract.NoteEntry.TABLE_NAME, where, whereArgs);
-        noteDB.close();
 
-        if (note.getImage_id() != null) {
-            ImageDAO imageDAO = new ImageDAOImpl(context);
-            imageDAO.deleteNoteImageFromFile(context, note);
-        }
+        System.out.println("#################note deleted in DB: note object values:" + note.getNote_id() + note.note_title + note.note_text + ", #########################");
+
+//        if (note.getImage_id() != null) {
+//            ImageDAO imageDAO = new ImageDAOImpl(context);
+//            imageDAO.deleteNoteImageFromFile(context, note);
+//        }
     }
 
     @Override
     public ArrayList<Note> getAllSavedNotes() {
         ArrayList<Note> noteList = new ArrayList<>();
-        Note note = new Note();
         SQLiteDatabase noteDB = noteDBHelper.getReadableDatabase();
 
         // Define a projection that specifies which columns from the database (CURRENTLY USING ALL COLUMNS BUT REALLY SHOULD ONLY USE NOTE TITLES WHEN LOADING FROM STORAGE
@@ -138,20 +137,22 @@ public class NoteDAOImplSQLite implements NoteDAO {
 
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
-            note.note_id = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID);
-            note.image_id = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID);
-            note.note_title = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE);
-            noteList.add(note);
+            Note loadedNote = new Note(
+                            getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID),
+                            getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID),
+                            getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE));
+            noteList.add(loadedNote);
+            System.out.println(loadedNote.note_id);
             cursor.moveToNext();
         }
         cursor.close();
-        noteDB.close();
 
         return noteList;
     }
 
     private String getStringFromCursor(Cursor cursor, String column_name){
         String attr = cursor.getString(cursor.getColumnIndexOrThrow(column_name));
+        System.out.println("getting cursor attribute:" + attr + "#######################");
         return attr;
     }
 

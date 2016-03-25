@@ -30,22 +30,21 @@ public class Note {
             super();
             note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
             image_id = null;
-            note_text = "Write your note here!";
-            note_title = "Untitled";
+            note_text = null;
+            note_title = null;
         }
 
-        /* Constructor for existing note read from DB */
-        public Note(String note_id, String image_id, String note_title, String note_text) {
+        /* Constructor for existing note read from DB for preview*/
+        public Note(String note_id, String image_id, String note_title) {
             super();
             this.note_id = note_id;
             this.image_id = image_id;
-            this.note_text = note_text;
-            if (note_title != "Untitled") {
-                this.note_title = note_title;
-            }
-            else {
-                setTitleAsHead();
-            }
+            this.note_text = null;
+            this.note_title = note_title;
+//            }
+//            else {
+//                setTitleAsHead();
+//            }
         }
 
         public void setTitleAsHead() {

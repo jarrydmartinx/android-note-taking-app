@@ -26,15 +26,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private Context context;
+    public Context context = this;
     public ArrayList<Note> noteArray;
-    private NoteDAO noteDAO;
+    public static NoteDAO noteDAO;
     private GridView noteGridView;
     private NoteGridAdapter noteGridAdapter;
 
@@ -44,10 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-        this.context = this;
-        this.noteDAO = new NoteDAOImplSQLite(context);
+        noteDAO = new NoteDAOImplSQLite(context);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -62,14 +60,15 @@ public class MainActivity extends AppCompatActivity {
                         newNote.getNote_id());
                 startActivity(launchEditNoteIntent);
             }
-
-
         });
 
 
-        NoteDAO noteDAO = new NoteDAOImplSQLite(context);
+
         /* Load all notes into an Array to back the NoteAdapter */
-        noteArray = noteDAO.getAllSavedNotes();
+        this.noteArray = noteDAO.getAllSavedNotes();
+
+        System.out.println("########MAINACTIVITY ONCREATE GET ALL SAVED NOTES INSTANCE##########  Note Array is: " + noteArray.size() + "notes long.#########################");
+        System.out.println("########NOTE ARRAY VALUES: " + noteArray.get(0).getNote_id() + ", and second element: " + noteArray.get(1).getNote_id() + "#########################");
 
         /* Click listener for responding to notePreview click, for launching EditNoteActivity */
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         /* Instantiate the main GridView Object that displays note previews*/
         noteGridView = (GridView) findViewById(R.id.noteGridView);
 
-        /* Instantiate NoteAdapter that liases bw data and GridView */
+        /* Instantiate NoteAdapter that sits bw data and GridView */
         noteGridAdapter = new NoteGridAdapter(this, R.layout.note_preview, noteArray);
         noteGridView.setAdapter(noteGridAdapter);
         noteGridView.setOnItemClickListener(notePreviewClickedListener);
@@ -103,14 +102,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position,
                                                   long id, boolean checked) {
-                //
+               //
             }
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 // Respond to clicks on the actions in the CAB
                 int item_id = item.getItemId();
-                if (item_id == R.id.delete) {
+
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
                     alertBuilder.setMessage(R.string.delete_confirm_message)
                             .setTitle(R.string.delete_confirm_title)
@@ -126,10 +125,9 @@ public class MainActivity extends AppCompatActivity {
                                     //Delete Action Cancelled By the User
                                 }
                             });
-
+                if (item_id == R.id.delete) {
                     AlertDialog alertDialog = alertBuilder.create();
                     alertDialog.show();
-
                     mode.finish(); // Action picked, so close the CAB
                     return true;
                 } else {
@@ -168,11 +166,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo info){
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return;
-//    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo info){
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -184,20 +182,20 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        int item_id = item.getItemId();
-//        Note note = (Note) noteGridView.getSelectedItem();
-//
-//        if (item_id == R.id.delete) {
-//            noteDAO.deleteNoteDataAndImage(note);
-//            noteArray.remove(note);
-//            noteGridAdapter.notifyDataSetChanged();
-//            noteGridView.invalidateViews();
-//            return true;
-//        }
-//        return false;
-//    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int item_id = item.getItemId();
+        Note note = (Note) noteGridView.getSelectedItem();
+
+        if (item_id == R.id.delete) {
+            noteDAO.deleteNoteDataAndImage(note);
+            noteArray.remove(note);
+            noteGridAdapter.notifyDataSetChanged();
+            noteGridView.invalidateViews();
+            return true;
+        }
+        return false;
+    }
 
     public void deleteCheckedNotes(SparseBooleanArray positions) {
         Note note;
@@ -205,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < positions.size(); i++) {
             if(positions.get(i)) {
                 note = (Note) noteGridView.getItemAtPosition(i);
-                System.out.println("################### note_id: " + note.note_id + ", note_title: " + note.note_title + ", ______________");
+                System.out.println("#######DELETE MULTIPLE MAINACTIVITY############ note_id: " + note.note_id + ", note_title: " + note.note_title + ", ______________");
                 noteDAO.deleteNoteDataAndImage(note);
                 noteArray.remove(note);
             }

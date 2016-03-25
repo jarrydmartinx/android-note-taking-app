@@ -2,4 +2,5 @@
 <resources>
     <integer name="view_tag_for_viewholder">84394653</integer>
     <integer name="view_tag_for_note">66836683</integer>
+
 </resources>

@@ -30,23 +30,24 @@ public class EditNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
 
-        this.context = getApplicationContext();
-        this.noteDAO = new NoteDAOImplSQLite(context);
+        context = getApplicationContext();
+        noteDAO = new NoteDAOImplSQLite(context);
 
     /* Get Intent Message */
         Intent editNoteIntent = getIntent();
         String received_note_id = editNoteIntent.getStringExtra(context.getString(R.string.selected_note_id));
 
         //Load note from Database
-        note = noteDAO.loadNote(received_note_id);
+        note = MainActivity.noteDAO.loadNote(received_note_id);
 
 
     /* Instantiate widgets*/
-        noteEditText = (EditText) findViewById(R.id.noteEditText);
         titleEditText = (EditText) findViewById(R.id.titleEditText);
+        noteEditText = (EditText) findViewById(R.id.noteEditText);
         noteImageView = (MyImageView) findViewById(R.id.noteImageView);
 
-        noteEditText.setText(note.note_text);
+        titleEditText.setText(note.note_title, TextView.BufferType.EDITABLE);
+        noteEditText.setText(note.note_text, TextView.BufferType.EDITABLE);
         //here you're reloading the image afresh, that's fine
         if (note.image_id != null) {
             noteImageView.setBitmapViaBackgroundTask(getApplicationContext(), note.image_id);
@@ -103,6 +104,9 @@ public class EditNoteActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialogInterface, int item_id) {
                             noteDAO.deleteNoteDataAndImage(note);
+                            System.out.println("#######DELETE ONE EDIT############ note_id: " + note.note_id + ", note_title: " + note.note_title + ", ______________");
+                            Intent launchMainActivityIntent = new Intent(EditNoteActivity.this, MainActivity.class);
+                            startActivity(launchMainActivityIntent);
                         }
                     })
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -116,8 +120,10 @@ public class EditNoteActivity extends AppCompatActivity {
 
         }
         if (item_id == R.id.save) {
+            note.note_text = noteEditText.getText().toString();
+            note.note_title = titleEditText.getText().toString();
             noteDAO.updateNoteData(note);
-
+            System.out.println("#######SAVE ONE EDITACTIVITY############ note_id: " + note.note_id + ", note_title: " + note.note_title + ", ______________");
             Snackbar saveSnackbar = Snackbar.make(noteEditText, "Note Saved!", Snackbar.LENGTH_LONG);
             saveSnackbar.show();
             return true;

@@ -15,6 +15,7 @@ public interface NoteDAO {
         Note loadNote(String note_id);
         void deleteNoteDataAndImage(Note note);
         void saveNewNoteData(Note note);
+
         void updateNoteData(Note note);
 
 

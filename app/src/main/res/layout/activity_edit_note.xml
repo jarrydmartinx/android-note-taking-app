@@ -29,9 +29,8 @@
                 android:layout_height="match_parent"
                 android:textAppearance=
                     "?android:attr/textAppearanceMedium"
-                android:text="Note Text"
+                android:hint="The body and soul of your note..."
                 android:inputType="textMultiLine"
-                android:layout_centerHorizontal="true"
                 android:visibility="visible"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -39,36 +38,18 @@
                 android:paddingBottom= "10dp"
                 android:background="@color/lavender"
                 android:hapticFeedbackEnabled="true"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentTop="false"
-                android:layout_below="@+id/noteImageView"
                 android:textColor="#06064a"
                 android:textIsSelectable="true"
                 android:minLines="5"
                 android:nestedScrollingEnabled="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-            android:typeface="serif">
+            android:typeface="serif"
+            android:layout_below="@+id/titleEditText"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+            <requestFocus/>
             </EditText>
-
-            <com.example.jarryd.assignment_1.MyImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/noteImageView"
-                android:visibility="visible"
-                android:paddingTop="10dp"
-                android:paddingLeft ="10dp"
-                android:paddingRight = "10dp"
-                android:adjustViewBounds="false"
-                android:background="@color/lavender"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentStart="false"
-                android:requiresFadingEdge="vertical"
-                android:hapticFeedbackEnabled="true"
-
-                >
-            </com.example.jarryd.assignment_1.MyImageView>
 
         <EditText
             android:layout_width="match_parent"
@@ -82,12 +63,32 @@
             android:textStyle="bold"
             android:typeface="serif"
             android:padding="10dp"
-            android:minLines="1"
-            android:text="Title"
+            android:minLines="2"
+            android:hint="Note Title"
+            android:background="@color/lavender"
             android:textIsSelectable="true"
             android:focusableInTouchMode="true"
             android:visibility="visible"
-            android:layout_above="@+id/noteEditText" />
+            android:inputType="textAutoCorrect" />
+
+        <com.example.jarryd.assignment_1.MyImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/noteImageView"
+            android:visibility="visible"
+            android:paddingTop="10dp"
+            android:paddingLeft ="10dp"
+            android:paddingRight = "10dp"
+            android:adjustViewBounds="false"
+            android:background="@color/lavender"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
+            android:requiresFadingEdge="vertical"
+            android:hapticFeedbackEnabled="true"
+
+            >
+        </com.example.jarryd.assignment_1.MyImageView>
 
     </RelativeLayout>
     </ScrollView>

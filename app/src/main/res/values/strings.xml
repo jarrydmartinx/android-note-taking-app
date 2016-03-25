@@ -14,4 +14,5 @@
     <string name="delete_confirm_message">This note (and any image) will be permanently deleted</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
-</resources>
+    <string name="enter_title_message">Give your note a title: </string>
+ </resources>

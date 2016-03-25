@@ -14,14 +14,14 @@
         android:layout_height="wrap_content"
         android:textAppearance=
             "?android:attr/textAppearanceSmall"
-        android:text="Note Text"
+        android:text="Untitled"
         android:gravity="center_vertical"
         android:layout_below="@+id/noteImageView"
         android:layout_centerHorizontal="true"
         android:visibility="visible"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="10dp"
+        android:paddingTop="0dp"
         android:paddingBottom="10dp"
 
         android:background="@color/lavender">
