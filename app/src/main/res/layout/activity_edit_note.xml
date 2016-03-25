@@ -42,15 +42,13 @@
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentTop="false"
                 android:layout_below="@+id/noteImageView"
-                android:clickable="false"
                 android:textColor="#06064a"
-                android:textColorHighlight="#7eb4d7"
                 android:textIsSelectable="true"
                 android:minLines="5"
                 android:nestedScrollingEnabled="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                >
+            android:typeface="serif">
             </EditText>
 
             <com.example.jarryd.assignment_1.myImageView
@@ -67,8 +65,29 @@
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentStart="false"
                 android:requiresFadingEdge="vertical"
+                android:hapticFeedbackEnabled="true"
+
                 >
             </com.example.jarryd.assignment_1.myImageView>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleEditText"
+            android:textAppearance=
+                "?android:attr/textAppearanceMedium"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/noteImageView"
+            android:focusable="true"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:padding="10dp"
+            android:minLines="1"
+            android:text="Title"
+            android:textIsSelectable="true"
+            android:focusableInTouchMode="true"
+            android:visibility="visible"
+            android:layout_above="@+id/noteEditText" />
 
     </RelativeLayout>
     </ScrollView>

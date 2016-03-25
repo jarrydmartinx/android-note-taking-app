@@ -23,7 +23,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity
 {
-    private static final Context context = g;
+    private final Context context = getApplicationContext();
     private static final String TAG = "MainActivity";
     public ArrayList<Note> noteArray;
 

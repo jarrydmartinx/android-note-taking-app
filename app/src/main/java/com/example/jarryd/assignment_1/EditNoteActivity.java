@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +23,9 @@ import java.util.Date;
 public class EditNoteActivity extends AppCompatActivity {
 
     /* Declare widget objects */
-    TextView noteText;
-    myImageView noteImage;
+    EditText noteEditText;
+    myImageView noteImageView;
+    EditText titleEditText;
     Note note;
 
     @Override
@@ -35,17 +37,20 @@ public class EditNoteActivity extends AppCompatActivity {
         Intent editNoteIntent = getIntent();
         String key = "note_selected";
         note = (Note) editNoteIntent.getExtras().getSerializable(key);
+        //or should you load the note from file?
 
     /* Instantiate widgets*/
-        noteText = (TextView) findViewById(R.id.noteEditText);
-        noteImage = (myImageView) findViewById(R.id.noteImageView);
+        noteEditText = (EditText) findViewById(R.id.noteEditText);
+        titleEditText = (EditText) findViewById(R.id.titleEditText);
+        noteImageView = (myImageView) findViewById(R.id.noteImageView);
 
-        noteText.setText(note.note_text);
-        noteImage.setBitmapViaBackgroundTaskFromResource(R.drawable.john);
+        noteEditText.setText(note.note_text);
+        //here you're reloading the image afresh, that's fine
+        noteImageView.setBitmapViaBackgroundTaskFromResource(R.drawable.john);
 
         int deviceAPIversion = android.os.Build.VERSION.SDK_INT;
         if (deviceAPIversion >= Build.VERSION_CODES.LOLLIPOP) {
-            noteText.setShowSoftInputOnFocus(true);
+            noteEditText.setShowSoftInputOnFocus(true);
         }
     }
     /*  Method to Add photos */

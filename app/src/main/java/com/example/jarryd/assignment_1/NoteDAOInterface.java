@@ -10,14 +10,15 @@ import java.util.List;
  */
 public interface NoteDAOInterface {
 
-        public ArrayList<Note> getAllSavedNotes(Context context);
+        ArrayList<Note> getAllSavedNotes(Context context);
 
-        public void createNote();
-        public void saveNote(Note note);
-        public void deleteNote(Note note);
+        Note loadNote(String note_id);
+        void deleteNoteData(Note note);
+        void saveNewNoteData(Note note);
+        void updateNoteData(Note note);
 
-        public Note getNotebyId(String note_id);
-        public String getImageId(String note_id);
+       // Note readInNote(String note_id);
+
 
 }
 

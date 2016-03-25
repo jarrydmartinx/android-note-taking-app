@@ -23,7 +23,7 @@ public class Note implements Serializable {
     public String note_id;
     public String image_id;
     public String note_text;
-    public String note_head;
+    public String note_title;
 
         /* Constructor for fake notes */
         public Note(){
@@ -31,7 +31,7 @@ public class Note implements Serializable {
             note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
             image_id = null;
             note_text = "Sample Note Text";
-            note_head = "Blank Note";
+            note_title = null;
         }
 
         /* Constructor for new note
@@ -40,18 +40,31 @@ public class Note implements Serializable {
             note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
             image_id = null;
             note_text = "";
-            note_head = "Blank Note";
+            note_title = null;
         }
         */
 
 
-        /* Constructor for existing note WHAT THE HELL IS THIS SUPPOSED TO BE FOR???*/
-        public Note(String note_id, String image_id,String note_text) {
+        /* Constructor for existing note read from DB */
+        public Note(String note_id, String image_id, String note_title, String note_text) {
             super();
             this.note_id = note_id;
             this.image_id = image_id;
             this.note_text = note_text;
-            setNote_head();
+            if (note_title != null) {
+                this.note_title = note_title;
+            }
+            else {
+                setTitleAsHead();
+            }
+        }
+
+        public void setTitleAsHead() {
+            int head_length;
+            if (this.image_id == null){
+                head_length = 80; //MAGIC NUMBERZZZZZZZZZZZZZZZZZZZZZZZZZ
+            } else head_length = 30; //MAGIC NUMBERZZZZZZZZZZZZZZZZZZZZZZZZZ
+            this.note_title = note_text.substring(0, Math.min(note_text.length(),head_length))+"...";
         }
 
         public String getNote_id(){
@@ -60,19 +73,6 @@ public class Note implements Serializable {
 
         public String getImage_id(){
             return image_id;
-        }
-
-        public void setNote_head() {
-            int head_length;
-            if (this.image_id == null){
-                head_length = 60; //MAGIC NUMBERZZZZZZZZZZZZZZZZZZZZZZZZZ
-            } else head_length = 20; //MAGIC NUMBERZZZZZZZZZZZZZZZZZZZZZZZZZ
-
-            this.note_head = note_text.substring(0, Math.min(note_text.length(),head_length))+"...";
-        }
-
-        public void setNote_head(String note_head) {
-            this.note_head = note_head;
         }
 
         public void setNote_id(String note_id) {
@@ -87,20 +87,21 @@ public class Note implements Serializable {
             this.note_text = note_text;
         }
 
-        public void setAll(String note_id, String image_id, String note_text, String note_head){
+        public void setNote_title(String note_title){
+            this.note_title = note_title;
+        }
+
+        public void setAllNoteAttributes(String note_id, String image_id, String note_text, String note_head){
             this.note_id = note_id;
             this.image_id = image_id;
             this.note_text = note_text;
-            this.note_head = note_head;
+            this.note_title = note_title;
         }
 
     /* Note load method */
-        static public Note loadNoteFromFile(File file) {
-            Note loaded_note = null;
-            try {
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-                loaded_note = (Note) ois.readObject();
-            }
+        static public Note loadNoteForEditing(File file) {
+            Note note;
+            ge
             catch(IOException e){
                 e.printStackTrace();
             }

@@ -2,6 +2,7 @@ package com.example.jarryd.assignment_1;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.JsonReader;
 import android.util.JsonWriter;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  */
 public class NoteDAOimplSQLite implements NoteDAOInterface {
     private Context context;
-    private NoteDBHelper = new NoteDBHelper(context);
+    private NoteDBHelper noteDBHelper = new NoteDBHelper(context);
 
 
     private static final String TYPE = " TEXT";
@@ -36,37 +37,136 @@ public class NoteDAOimplSQLite implements NoteDAOInterface {
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + NoteDBContract.NoteEntry.TABLE_NAME;
 
-    public NoteDAOimplSQLite(Context context){
+    public NoteDAOimplSQLite(Context context) {
         this.context = context;
+    }
+
+    @Override
+    public void saveNewNoteData(Note note) {
+        SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
+
+        //Creates a new Hash Map of values where the column names of noteDB are the keys
+        ContentValues values = new ContentValues();
+        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID, note.getNote_id());
+        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID, note.getImage_id());
+        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE, note.note_title);
+        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note.note_text);
+
+        long new_integer_row_id;
+        new_integer_row_id = noteDB.insert(
+                NoteDBContract.NoteEntry.TABLE_NAME, null, values);
+
+        if (note.getImage_id() != null) {
+            saveNoteImageToFile(note);
+        }
+    }
+
+    @Override
+    public Note loadNote(String note_id) {
+        Note note = new Note();
+        SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
+
+        String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " LIKE ?";
+        String[] whereArgs = {note_id};
+
+        Cursor cursor = noteDB.query(
+                NoteDBContract.NoteEntry.TABLE_NAME,  // The table to query
+                null,                               // The columns to return
+                where,                                // The columns for the WHERE clause
+                whereArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                 // The sort order
+        );
+
+        note.note_id = cursor.getString(1);
+        note.image_id = cursor.getString(2);
+        note.note_title = cursor.getString(3);
+        note.note_text = cursor.getString(4);
+
+        return note;
+    }
+
+
+    @Override
+    public void updateNoteData(Note note) {
+        SQLiteDatabase noteDB = noteDBHelper.getReadableDatabase();
+
+        // Create a hash map where DB column names are keys and note member fields are the values
+        // Updates the stored value of every field of the note object on which updateNote is called
+        ContentValues values = new ContentValues();
+        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID, note.getNote_id());
+        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID, note.getImage_id());
+        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE, note.note_text);
+        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note.note_title);
+
+        // Which row to update, based on the ID
+        String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " LIKE ?";
+        String[] whereArgs = {note.getNote_id()};
+
+        int count = noteDB.update(NoteDBContract.NoteEntry.TABLE_NAME, values, where, whereArgs);
+
+        if (note.image_id != null){
+            saveNoteImageToFile(note);
+        }
+    }
+
+    @Override
+    public void deleteNoteData(Note note) {
+        SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
+        String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " LIKE ?";
+        // Specify arguments in placeholder order.???????????????????????????????????????????????
+        String[] whereArgs = { note.getNote_id() };
+       //SQL delete statement
+        noteDB.delete(NoteDBContract.NoteEntry.TABLE_NAME, where, whereArgs);
+
+        if (note.getImage_id() != null) {
+            deleteNoteImageFromFile(note);
+        }
     }
 
 
 
-    // Instantiate the SQLite Database in write mode
-    SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
+    }
 
-    // Create a new table of values, column names are the keys
-    ContentValues values = new ContentValues();
+    public Note getAllSavedNotes(Context context) {
+        Note note;
+        SQLiteDatabase noteDB = noteDBHelper.getReadableDatabase();
 
-    public void createNote();
-    public void saveNote(Note note);
-    public void deleteNote(Note note);
+        // Define a projection that specifies which columns from the database (CURRENTLY USING ALL COLUMNS BUT REALLY SHOULD ONLY USE NOTE TITLES WHEN LOADING FROM STORAGE
+        // you will actually use after this query.
+        String[] proj = {
+                NoteDBContract.NoteEntry._ID,
+                NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID,
+                NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID,
+                NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE
+        };
 
-    public Note getNotebyId(String note_id);
-    public String getImageId(String note_id);
+        Cursor cursor = noteDB.query(
+                NoteDBContract.NoteEntry.TABLE_NAME,  // The table to query
+                proj,                               // The columns to return
+                where,                                // The columns for the WHERE clause
+                whereArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                 // The sort order
+        );
+
+        return note;
+    }
 
 
-    public createNote
-    values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID, note_id);
-    values.put(NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID, image_id);
-    values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note_text);
 
+    private void saveNoteImageToFile(Note note) {
+        //must write this helper method
+    }
+
+    private void deleteNoteImageFromFile(Note note) {
+        //write this helper method
+
+    }
     // Insert the new row, returning the primary key value of the new row
-    long newRowId;
-    newRowId = db.insert(
-    NoteDBContract.NoteEntry.TABLE_NAME,
-    NoteDBContract.NoteEntry.COLUMN_NAME_NULLABLE,
-    values);
+
 
 
 
