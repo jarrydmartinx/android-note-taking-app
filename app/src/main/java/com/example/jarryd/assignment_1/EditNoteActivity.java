@@ -1,32 +1,45 @@
 package com.example.jarryd.assignment_1;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class EditNoteActivity extends AppCompatActivity {
-    private final Context context = getApplicationContext();
+//    private final Context context = getApplicationContext();
 
     /* Declare widget objects */
+    Context context;
+    Note note;
+    NoteDAO noteDAO;
     EditText noteEditText;
     MyImageView noteImageView;
     EditText titleEditText;
-    Note note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
 
+        this.context = getApplicationContext();
+        this.noteDAO = new NoteDAOImplSQLite(context);
+
     /* Get Intent Message */
         Intent editNoteIntent = getIntent();
-        String key = "note_selected";
-        note = (Note) editNoteIntent.getExtras().getSerializable(key);
-        //or should you load the note from file?
+        String received_note_id = editNoteIntent.getStringExtra(context.getString(R.string.selected_note_id));
+
+        //Load note from Database
+        note = noteDAO.loadNote(received_note_id);
+
 
     /* Instantiate widgets*/
         noteEditText = (EditText) findViewById(R.id.noteEditText);
@@ -35,8 +48,11 @@ public class EditNoteActivity extends AppCompatActivity {
 
         noteEditText.setText(note.note_text);
         //here you're reloading the image afresh, that's fine
-        noteImageView.setBitmapViaBackgroundTask(context, note.image_id);
+        if (note.image_id != null) {
+            noteImageView.setBitmapViaBackgroundTask(getApplicationContext(), note.image_id);
+        }
 
+        noteEditText.clearFocus();
         int deviceAPIversion = android.os.Build.VERSION.SDK_INT;
         if (deviceAPIversion >= Build.VERSION_CODES.LOLLIPOP) {
             noteEditText.setShowSoftInputOnFocus(true);
@@ -71,6 +87,48 @@ public class EditNoteActivity extends AppCompatActivity {
         return true;
     }
 
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int item_id = item.getItemId();
+
+        //
+        if (item_id == R.id.delete) {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+
+            alertBuilder.setMessage(R.string.delete_confirm_message)
+                    .setTitle(R.string.delete_confirm_title)
+                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int item_id) {
+                            noteDAO.deleteNoteDataAndImage(note);
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int item_id) {
+                            //Delete Action Cancelled By the User
+                        }
+                    });
+
+            AlertDialog alertDialog = alertBuilder.create();
+            alertDialog.show();
+
+        }
+        if (item_id == R.id.save) {
+            noteDAO.updateNoteData(note);
+
+            Snackbar saveSnackbar = Snackbar.make(noteEditText, "Note Saved!", Snackbar.LENGTH_LONG);
+            saveSnackbar.show();
+            return true;
+        }
+
+        if (item_id == R.id.share){
+            //share function note implemented
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     public void readToVoice(){
         //

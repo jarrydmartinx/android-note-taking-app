@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by jarryd on 21/03/16.
  */
-     public class NoteAdapter extends ArrayAdapter<Note> {
+     public class NoteGridAdapter extends ArrayAdapter<Note> {
 
         private ArrayList<Note> noteArray;
         private final Context context;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
             protected MyImageView imageView;
         }
 
-        public NoteAdapter(Context context, int layout_id, ArrayList<Note> noteArray) {
+        public NoteGridAdapter(Context context, int layout_id, ArrayList<Note> noteArray) {
             super(context, layout_id, noteArray);
             this.context = context;
             this.layout_id = layout_id;
@@ -46,23 +46,24 @@ import java.util.ArrayList;
                     holder = new ViewHolder();
                     holder.textView = (TextView) notePreview.findViewById(R.id.noteTextView);
                     holder.imageView = (MyImageView) notePreview.findViewById(R.id.noteImageView);
-                    notePreview.setTag(holder);
+                    notePreview.setTag(
+                            context.getResources().getInteger(R.integer.view_tag_for_viewholder),
+                            holder);
             } else {
-                holder = (ViewHolder) notePreview.getTag(); //Still not totally clear on the Tags
+                holder = (ViewHolder) notePreview.getTag(
+                        context.getResources().getInteger(R.integer.view_tag_for_viewholder));
             }
 
-         /* get data from the noteArray to set text for each Note Preview to  note_head */
-
+            /* Sets the title and image (if any) of the notePreview*/
             holder.textView.setText(noteArray.get(index).note_title);
+            if (noteArray.get(index).image_id !=  null) {
+                holder.imageView.setBitmapViaBackgroundTask(context, noteArray.get(index).image_id);
+            }
+            // Sets a Tag in order to keep the data of the associated Note object with this view for later use
+            notePreview.setTag(
+                    context.getResources().getInteger(R.integer.view_tag_for_note),
+                    noteArray.get(index));
 
-            /* get data from the noteArray to set Image for each Note Preview */
-
-//            if (noteArray[index].image_id !=  null) {
-//                String image_pathname = context.getFilesDir() + "IMAGE_" + noteArray[index].image_id + "_";
-//              setBitmapViaBackgroundTask(holder.imageView.getId(), image_pathname, holder.imageView);
-              holder.imageView.setBitmapViaBackgroundTask(context, noteArray.get(index).image_id);
-
-//            }
             return notePreview;
         }
 

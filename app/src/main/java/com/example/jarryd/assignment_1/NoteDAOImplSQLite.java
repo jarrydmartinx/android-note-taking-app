@@ -10,12 +10,9 @@ import java.util.ArrayList;
 /**
  * Created by jarryd on 24/03/16. draws on http://developer.android.com/reference/android/util/JsonReader.html, http://developer.android.com/reference/android/util/JsonWriter.html
  */
-public class NoteDAOimplSQLite implements NoteDAO {
+public class NoteDAOImplSQLite implements NoteDAO {
     public Context context;
-
-
-    private NoteDBHelper noteDBHelper = new NoteDBHelper(context);
-
+    private NoteDBHelper noteDBHelper;
 
     private static final String TYPE = " TEXT";
     private static final String SEP = ",";
@@ -24,14 +21,17 @@ public class NoteDAOimplSQLite implements NoteDAO {
                     NoteDBContract.NoteEntry._ID + " INTEGER PRIMARY KEY" + SEP +
                     NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + TYPE + SEP +
                     NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID + TYPE + SEP +
-                    NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT + TYPE + SEP + " )";
+                    NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE + TYPE + SEP +
+                    NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT + TYPE + " )";
 
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + NoteDBContract.NoteEntry.TABLE_NAME;
 
-    public NoteDAOimplSQLite(Context context) {
+    public NoteDAOImplSQLite(Context context) {
         this.context = context;
+        this.noteDBHelper = new NoteDBHelper(context);
     }
+
 
     @Override
     public void saveNewNoteData(Note note) {
@@ -45,6 +45,7 @@ public class NoteDAOimplSQLite implements NoteDAO {
         values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note.note_text);
 
         noteDB.insert(NoteDBContract.NoteEntry.TABLE_NAME, null, values);
+        noteDB.close();
     }
 
     @Override
@@ -70,9 +71,8 @@ public class NoteDAOimplSQLite implements NoteDAO {
         note.image_id = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID);
         note.note_title = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE);
         note.note_text = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT);
-
         cursor.close();
-
+        noteDB.close();
         return note;
     }
 
@@ -92,20 +92,22 @@ public class NoteDAOimplSQLite implements NoteDAO {
         String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " LIKE ?";
         String[] whereArgs = {note.getNote_id()};
 
-        int count = noteDB.update(NoteDBContract.NoteEntry.TABLE_NAME, values, where, whereArgs);
+        noteDB.update(NoteDBContract.NoteEntry.TABLE_NAME, values, where, whereArgs);
+        noteDB.close();
     }
 
     @Override
-    public void deleteNoteDataandImage(Note note) {
+    public void deleteNoteDataAndImage(Note note) {
         SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
         String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " LIKE ?";
         // Specify arguments in placeholder order.???????????????????????????????????????????????
         String[] whereArgs = { note.getNote_id() };
        //SQL delete statement
         noteDB.delete(NoteDBContract.NoteEntry.TABLE_NAME, where, whereArgs);
+        noteDB.close();
 
         if (note.getImage_id() != null) {
-            ImageDAOImpl imageDAO = new ImageDAOImpl(context);
+            ImageDAO imageDAO = new ImageDAOImpl(context);
             imageDAO.deleteNoteImageFromFile(context, note);
         }
     }
@@ -142,6 +144,9 @@ public class NoteDAOimplSQLite implements NoteDAO {
             noteList.add(note);
             cursor.moveToNext();
         }
+        cursor.close();
+        noteDB.close();
+
         return noteList;
     }
 

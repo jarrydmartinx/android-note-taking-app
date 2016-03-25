@@ -17,13 +17,13 @@ public class NoteDBHelper extends SQLiteOpenHelper {
 
         @Override
         public void onCreate(SQLiteDatabase noteDB) {
-            noteDB.execSQL(NoteDAOimplSQLite.SQL_CREATE_ENTRIES);
+            noteDB.execSQL(NoteDAOImplSQLite.SQL_CREATE_ENTRIES);
         }
         @Override
         public void onUpgrade(SQLiteDatabase noteDB, int oldVersion, int newVersion) {
             // This database is only a cache for online data, so its upgrade policy is
             // to simply to discard the data and start over
-            noteDB.execSQL(NoteDAOimplSQLite.SQL_DELETE_ENTRIES);
+            noteDB.execSQL(NoteDAOImplSQLite.SQL_DELETE_ENTRIES);
             onCreate(noteDB);
         }
 

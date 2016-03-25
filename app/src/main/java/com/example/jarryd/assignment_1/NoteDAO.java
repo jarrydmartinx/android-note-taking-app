@@ -13,7 +13,7 @@ public interface NoteDAO {
         ArrayList<Note> getAllSavedNotes();
 
         Note loadNote(String note_id);
-        void deleteNoteDataandImage(Note note);
+        void deleteNoteDataAndImage(Note note);
         void saveNewNoteData(Note note);
         void updateNoteData(Note note);
 

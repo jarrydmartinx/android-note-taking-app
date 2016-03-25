@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by jarryd on 20/03/16. REMEMBER YOU STOPPED IT BEING SERIALIZABLE NOW
+ * Created by jarryd on 20/03/16.
  */
 public class Note {
 
@@ -24,15 +24,6 @@ public class Note {
     public String image_id;
     public String note_text;
     public String note_title;
-
-//        /* Constructor for fake notes */
-//        public Note(){
-//            super();
-//            note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
-//            image_id = null;
-//            note_text = "Sample Note Text";
-//            note_title = null;
-//        }
 
         /* Constructor for new note */
         public Note(){

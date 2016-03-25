@@ -22,25 +22,17 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
         private final WeakReference<MyImageView> noteImageViewRef;
         private int data = 0;
         private String image_id;
-        private int resId;
-        private Context context;
         private ImageDAO imageDAO;
+        private Context context;
 
         public BackgroundBitmapTask(Context context, MyImageView noteImageView, String image_id) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             this.image_id = image_id;
             noteImageViewRef = new WeakReference<>(noteImageView);
             this.imageDAO = new ImageDAOImpl(context);
+            this.context = context;
         }
 
-        // Constructor for testing, takes a resource id rather than a pathname
-//        public BackgroundBitmapTask(ImageView noteImageView, int resId, Context context) {
-//        // Use a WeakReference to ensure the ImageView can be garbage collected
-//            noteImageViewRef = new WeakReference<>(noteImageView);
-//            pathname = "no_path";
-//            this.resId = resId;
-//            this.context = context;
-//        }
 
         // An AsyncTask method. Process the photo in a background thread rather than the UI thread
         @Override
