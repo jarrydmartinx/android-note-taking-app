@@ -9,12 +9,12 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
 /**
  * Created by jarryd on 23/03/16.
  */
-public class myImageView extends ImageView {
+public class MyImageView extends ImageView {
 
     /**
      * @param context
      */
-    public myImageView(Context context){
+    public MyImageView(Context context){
         super(context);
     }
 
@@ -22,7 +22,7 @@ public class myImageView extends ImageView {
      * @param context
      * @param attrs
      */
-    public myImageView(Context context, AttributeSet attrs)
+    public MyImageView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
     }
@@ -32,25 +32,14 @@ public class myImageView extends ImageView {
      * @param attrs
      * @param defStyle
      */
-    public myImageView(Context context, AttributeSet attrs, int defStyle)
+    public MyImageView(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
     }
 
-    public void setBitmapViaBackgroundTaskFromResource(int image_id) {
-        if (cancelExistingBackgroundTask(this.getId(), this)) {
-            final BackgroundBitmapTask bgBmpTask = new BackgroundBitmapTask(this, image_id, getContext());
-            final BackgroundDrawable bgDrawable = new BackgroundDrawable(getContext().getResources(), null, bgBmpTask);
-                /* Set the drawable object as the content of this imageView */
-            this.setImageDrawable(bgDrawable);
-                /* Execute Bitmap Processing in the background thread */
-            bgBmpTask.execute(this.getId());
-        }
-    }
-
-            public void setBitmapViaBackgroundTask(String image_pathname) {
+            public void setBitmapViaBackgroundTask(Context context, String image_id) {
             if (cancelExistingBackgroundTask(this.getId(), this)) {
-                final BackgroundBitmapTask bgBmpTask = new BackgroundBitmapTask(this, image_pathname);
+                final BackgroundBitmapTask bgBmpTask = new BackgroundBitmapTask(context, this, image_id);
                 final BackgroundDrawable bgDrawable = new BackgroundDrawable(getContext().getResources(), null, bgBmpTask);
                 /* Set the drawable object as the content of this imageView */
                 this.setImageDrawable(bgDrawable);

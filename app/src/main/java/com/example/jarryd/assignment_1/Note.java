@@ -15,9 +15,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by jarryd on 20/03/16. REMEMBER IT DOESN"T NEED TO BE SERIALIZABLE IF YOU USE JSON
+ * Created by jarryd on 20/03/16. REMEMBER YOU STOPPED IT BEING SERIALIZABLE NOW
  */
-public class Note implements Serializable {
+public class Note {
 
     /*Declare Note class attributes*/
     public String note_id;
@@ -25,25 +25,23 @@ public class Note implements Serializable {
     public String note_text;
     public String note_title;
 
-        /* Constructor for fake notes */
+//        /* Constructor for fake notes */
+//        public Note(){
+//            super();
+//            note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
+//            image_id = null;
+//            note_text = "Sample Note Text";
+//            note_title = null;
+//        }
+
+        /* Constructor for new note */
         public Note(){
             super();
             note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
             image_id = null;
-            note_text = "Sample Note Text";
-            note_title = null;
+            note_text = "Write your note here!";
+            note_title = "Untitled";
         }
-
-        /* Constructor for new note
-        public Note(){
-            super();
-            note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
-            image_id = null;
-            note_text = "";
-            note_title = null;
-        }
-        */
-
 
         /* Constructor for existing note read from DB */
         public Note(String note_id, String image_id, String note_title, String note_text) {
@@ -51,7 +49,7 @@ public class Note implements Serializable {
             this.note_id = note_id;
             this.image_id = image_id;
             this.note_text = note_text;
-            if (note_title != null) {
+            if (note_title != "Untitled") {
                 this.note_title = note_title;
             }
             else {
@@ -98,48 +96,5 @@ public class Note implements Serializable {
             this.note_title = note_title;
         }
 
-    /* Note load method */
-        static public Note loadNoteForEditing(File file) {
-            Note note;
-            ge
-            catch(IOException e){
-                e.printStackTrace();
-            }
-            catch(ClassNotFoundException e){
-                e.printStackTrace();
-            }
-            return loaded_note;
-        }
 
-
-        public void saveNoteToFile() {
-            try {
-                String noteFileName = "NOTE_" + note_id + "_";
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(noteFileName));
-
-                oos.writeObject(this);
-                oos.close();
-
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        public static Note[] loadAllNotesFromDir(File directory) {
-
-            FilenameFilter noteFilter = new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.startsWith("NOTE_");
-                }
-            };
-
-            File[] fileList = directory.listFiles(noteFilter);
-            Note[] noteArray = new Note[fileList.length];
-            for (int i = 0; i < fileList.length; i++) {
-                noteArray[i] = loadNoteFromFile(fileList[i]);
-            }
-            return noteArray;
-        }
 }

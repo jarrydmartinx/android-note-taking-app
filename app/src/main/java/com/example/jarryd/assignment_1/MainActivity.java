@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity
     private final Context context = getApplicationContext();
     private static final String TAG = "MainActivity";
     public ArrayList<Note> noteArray;
+    private  NoteDAO noteDAO = new NoteDAOimplSQLite(context);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,29 +39,33 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Note newNote = new Note();
+                noteDAO.saveNewNoteData(newNote);
+                Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
+                launchEditNoteIntent.putExtra(
+                        context.getString(R.string.selected_note_id),
+                        newNote.getNote_id());
+                startActivity(launchEditNoteIntent);
             }
+
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+
         });
 
-        noteArray = new ArrayList();
-        for (int i=0;i<20;i++) {
-            noteArray.add(new Note());
-//            noteArray[i].saveNoteToFile();
-        }
+        NoteDAO noteDAO = new NoteDAOimplSQLite(context);
         /* Load all notes into an Array to back the NoteAdapter */
-     //  noteArray = Note.loadAllNotesFromDir(getFilesDir());
+        noteArray = noteDAO.getAllSavedNotes();
 
 
         /* Click listener for responding to notePreview click, for launching EditNoteActivity */
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View view, int index, long id) {
                 Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
-                Bundle noteBundle = new Bundle();
-                String key = "note_selected";
-                noteBundle.putSerializable(key, noteArray.get(index));
-
-                launchEditNoteIntent.putExtras(noteBundle);
+                launchEditNoteIntent.putExtra(
+                        context.getString(R.string.selected_note_id),
+                        noteArray.get(index).getNote_id()
+                );
                 startActivity(launchEditNoteIntent);
             }
 

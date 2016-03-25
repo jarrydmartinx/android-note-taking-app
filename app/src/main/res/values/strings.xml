@@ -8,8 +8,6 @@
     <string name="save_button_title">Save</string>
     <string name="share_button_title">Share</string>
     <string name="notes_file">NOTE_DATA</string>
+    <string name="selected_note_id">selected_note_id</string>
 
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

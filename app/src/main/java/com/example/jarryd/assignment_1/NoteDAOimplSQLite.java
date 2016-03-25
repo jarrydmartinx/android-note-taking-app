@@ -4,24 +4,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.JsonReader;
-import android.util.JsonWriter;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 /**
  * Created by jarryd on 24/03/16. draws on http://developer.android.com/reference/android/util/JsonReader.html, http://developer.android.com/reference/android/util/JsonWriter.html
  */
-public class NoteDAOimplSQLite implements NoteDAOInterface {
-    private Context context;
+public class NoteDAOimplSQLite implements NoteDAO {
+    public Context context;
+
+
     private NoteDBHelper noteDBHelper = new NoteDBHelper(context);
 
 
@@ -52,13 +44,7 @@ public class NoteDAOimplSQLite implements NoteDAOInterface {
         values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE, note.note_title);
         values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note.note_text);
 
-        long new_integer_row_id;
-        new_integer_row_id = noteDB.insert(
-                NoteDBContract.NoteEntry.TABLE_NAME, null, values);
-
-        if (note.getImage_id() != null) {
-            saveNoteImageToFile(note);
-        }
+        noteDB.insert(NoteDBContract.NoteEntry.TABLE_NAME, null, values);
     }
 
     @Override
@@ -79,14 +65,16 @@ public class NoteDAOimplSQLite implements NoteDAOInterface {
                 null                                 // The sort order
         );
 
-        note.note_id = cursor.getString(1);
-        note.image_id = cursor.getString(2);
-        note.note_title = cursor.getString(3);
-        note.note_text = cursor.getString(4);
+        cursor.moveToFirst();
+        note.note_id = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID);
+        note.image_id = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID);
+        note.note_title = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE);
+        note.note_text = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT);
+
+        cursor.close();
 
         return note;
     }
-
 
     @Override
     public void updateNoteData(Note note) {
@@ -105,14 +93,10 @@ public class NoteDAOimplSQLite implements NoteDAOInterface {
         String[] whereArgs = {note.getNote_id()};
 
         int count = noteDB.update(NoteDBContract.NoteEntry.TABLE_NAME, values, where, whereArgs);
-
-        if (note.image_id != null){
-            saveNoteImageToFile(note);
-        }
     }
 
     @Override
-    public void deleteNoteData(Note note) {
+    public void deleteNoteDataandImage(Note note) {
         SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
         String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " LIKE ?";
         // Specify arguments in placeholder order.???????????????????????????????????????????????
@@ -121,22 +105,20 @@ public class NoteDAOimplSQLite implements NoteDAOInterface {
         noteDB.delete(NoteDBContract.NoteEntry.TABLE_NAME, where, whereArgs);
 
         if (note.getImage_id() != null) {
-            deleteNoteImageFromFile(note);
+            ImageDAOImpl imageDAO = new ImageDAOImpl(context);
+            imageDAO.deleteNoteImageFromFile(context, note);
         }
     }
 
-
-
-    }
-
-    public Note getAllSavedNotes(Context context) {
-        Note note;
+    @Override
+    public ArrayList<Note> getAllSavedNotes() {
+        ArrayList<Note> noteList = new ArrayList<>();
+        Note note = new Note();
         SQLiteDatabase noteDB = noteDBHelper.getReadableDatabase();
 
         // Define a projection that specifies which columns from the database (CURRENTLY USING ALL COLUMNS BUT REALLY SHOULD ONLY USE NOTE TITLES WHEN LOADING FROM STORAGE
         // you will actually use after this query.
         String[] proj = {
-                NoteDBContract.NoteEntry._ID,
                 NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID,
                 NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID,
                 NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE
@@ -145,182 +127,27 @@ public class NoteDAOimplSQLite implements NoteDAOInterface {
         Cursor cursor = noteDB.query(
                 NoteDBContract.NoteEntry.TABLE_NAME,  // The table to query
                 proj,                               // The columns to return
-                where,                                // The columns for the WHERE clause
-                whereArgs,                            // The values for the WHERE clause
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 null                                 // The sort order
         );
 
-        return note;
-    }
-
-
-
-    private void saveNoteImageToFile(Note note) {
-        //must write this helper method
-    }
-
-    private void deleteNoteImageFromFile(Note note) {
-        //write this helper method
-
-    }
-    // Insert the new row, returning the primary key value of the new row
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @Override
-    public ArrayList<Note> getAllSavedNotes(Context context) {
-        ArrayList<Note> noteList;
-        File file = new File(context.getFilesDir(), context.getResources().getString(R.string.notes_file));
-        try {
-            InputStream inputStream = new FileInputStream(file);
-            noteList = readJsonInputStream(inputStream);
-            return noteList;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            note.note_id = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID);
+            note.image_id = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID);
+            note.note_title = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE);
+            noteList.add(note);
+            cursor.moveToNext();
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void createNote();
-
-    public void updateNote(Note note);
-
-    public void deleteNote(Note note);
-
-    public Note getNotebyId(String note_id);
-
-    @Override
-    public void deleteNote(Note note) {
-        noteList.remove(note);
-    }
-
-    //retrieve list of students from the database
-
-
-    @Override
-    public Note getNote(String note_id) {
-        for (int i = 0; i < noteList.size(); i++) {
-            if (note_id.equals(noteList.get(i).note_id))
-                return noteList.get(i);
-        }
-        return noteList.get(-1);
-    }
-
-    @Override
-    public void updateNote(Note note) {
-        noteList.get(getNoteIndexInList(note.getNote_id())).setAll(note.note_id, note.image_id, note.note_text, note.note_head);
-    }
-
-    public int getNoteIndexInList(String note_id) {
-        for (int i = 0; i < noteList.size(); i++) {
-            if (note_id.equals(noteList.get(i).note_id))
-                return i;
-        }
-        return -1;
-    }
-
-
-    //JSON PARSER
-
-    //JSON reader
-    public ArrayList<Note> readJsonInputStream(InputStream inputStream) throws IOException {
-        JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
-        try {
-            return readNoteDataArray(jsonReader);
-        } finally {
-            jsonReader.close();
-        }
-    }
-
-    public ArrayList<Note> readNoteDataArray(JsonReader jsonReader) throws IOException {
-        ArrayList<Note> noteList = new ArrayList<>();
-
-        jsonReader.beginArray();
-        while (jsonReader.hasNext()) {
-            noteList.add(readNoteData(jsonReader));
-        }
-        jsonReader.endArray();
         return noteList;
     }
 
-    public Note readNoteData(JsonReader jsonReader) throws IOException {
-        String note_id = null;
-        String image_id = null;
-        String note_text = null;
-
-        jsonReader.beginObject();
-        while(jsonReader.hasNext()) {
-            String keyname = jsonReader.nextName();
-            if (keyname.equals("note_id")) {
-                note_id = jsonReader.nextString();
-            } else if (keyname.equals("image_id")) {
-                image_id = jsonReader.nextString();
-            } else if (keyname.equals("note_text")) {
-                note_text = jsonReader.nextString();
-            }else jsonReader.skipValue();
-        }
-        jsonReader.endObject();
-        return new Note(note_id,image_id,note_text);
-        }
-
+    private String getStringFromCursor(Cursor cursor, String column_name){
+        String attr = cursor.getString(cursor.getColumnIndexOrThrow(column_name));
+        return attr;
     }
 
-    //JSON writer
-    public void saveNoteList(OutputStream outputStream, ArrayList<Note> noteList) throws IOException {
-        JsonWriter jsonWriter = new JsonWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-        jsonWriter.setIndent("    ");
-        writeNoteArrayList(jsonWriter, noteList);
-        jsonWriter.close();
-    }
-
-    public void saveNote(OutputStream outputStream, Note note) throws IOException {
-        JsonWriter jsonWriter = new JsonWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-        jsonWriter.setIndent("    ");
-        writeNote(jsonWriter, note);
-        jsonWriter.close();
-    }
-
-    private void writeNoteArrayList(JsonWriter jsonWriter, ArrayList<Note> noteList) throws IOException {
-       jsonWriter.beginArray();
-        for (int i=0;i < noteList.size();i++) {
-            jsonWriter.beginObject();
-            jsonWriter.name("note_id").value(noteList.get(i).getNote_id());
-            jsonWriter.name("image_id").value(noteList.get(i).getNote_id());
-            jsonWriter.name("note_text").value(noteList.get(i).getNote_id());
-            jsonWriter.endObject();
-
-        }
-        jsonWriter.endArray();
-    }
-
-
-    public void writeNote(JsonWriter jsonWriter, Note note) throws IOException {
-         jsonWriter.beginObject();
-         jsonWriter.name("note_id").value(note.getNote_id();
-         jsonWriter.name("image_id").value(note.getNote_id();
-         jsonWriter.name("note_text").value(note.getNote_id();
-         jsonWriter.endObject();
-       }
-
-    public void deleteNoteFromData(Note note) {
-
-    }
 }

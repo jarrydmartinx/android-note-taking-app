@@ -51,7 +51,7 @@
             android:typeface="serif">
             </EditText>
 
-            <com.example.jarryd.assignment_1.myImageView
+            <com.example.jarryd.assignment_1.MyImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/noteImageView"
@@ -68,7 +68,7 @@
                 android:hapticFeedbackEnabled="true"
 
                 >
-            </com.example.jarryd.assignment_1.myImageView>
+            </com.example.jarryd.assignment_1.MyImageView>
 
         <EditText
             android:layout_width="match_parent"

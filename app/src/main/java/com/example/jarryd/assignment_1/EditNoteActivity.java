@@ -1,30 +1,19 @@
 package com.example.jarryd.assignment_1;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class EditNoteActivity extends AppCompatActivity {
+    private final Context context = getApplicationContext();
 
     /* Declare widget objects */
     EditText noteEditText;
-    myImageView noteImageView;
+    MyImageView noteImageView;
     EditText titleEditText;
     Note note;
 
@@ -42,11 +31,11 @@ public class EditNoteActivity extends AppCompatActivity {
     /* Instantiate widgets*/
         noteEditText = (EditText) findViewById(R.id.noteEditText);
         titleEditText = (EditText) findViewById(R.id.titleEditText);
-        noteImageView = (myImageView) findViewById(R.id.noteImageView);
+        noteImageView = (MyImageView) findViewById(R.id.noteImageView);
 
         noteEditText.setText(note.note_text);
         //here you're reloading the image afresh, that's fine
-        noteImageView.setBitmapViaBackgroundTaskFromResource(R.drawable.john);
+        noteImageView.setBitmapViaBackgroundTask(context, note.image_id);
 
         int deviceAPIversion = android.os.Build.VERSION.SDK_INT;
         if (deviceAPIversion >= Build.VERSION_CODES.LOLLIPOP) {
