@@ -16,10 +16,20 @@
         app:showAsAction="always"
         />
     <item
+        android:id="@+id/voice"
+        android:title= "@string/voice_button_title"
+        android:orderInCategory="3"
+        android:icon="@drawable/ic_mic_24dp"
+        app:showAsAction="always"
+        />
+    <item
         android:id="@+id/share"
         android:title= "@string/share_button_title"
         android:orderInCategory="3"
         android:icon="@drawable/ic_share_24dp"
         app:showAsAction="always"
+        android:actionProviderClass=
+            "android.widget.ShareActionProvider" />
         />
+
 </menu>

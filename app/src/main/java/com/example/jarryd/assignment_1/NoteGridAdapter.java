@@ -76,15 +76,14 @@ import java.util.ArrayList;
         return notePreview;
     }
 
-    public void updateCheckedNoteList(SparseBooleanArray positions){
+    public void updateCheckedNoteList(SparseBooleanArray positions) {
         this.checkedNotes = new ArrayList<>();
-        for(int i = 0; i<noteArray.size();i++) {
-        int note_position = getPosition(noteArray.get(i));
+        for (int i = 0; i < noteArray.size(); i++) {
+            int note_position = getPosition(noteArray.get(i));
             if (positions.get(note_position)) {
                 checkedNotes.add(noteArray.get(i));
             }
         }
     }
-
 
 }

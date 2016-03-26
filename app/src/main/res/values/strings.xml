@@ -19,4 +19,8 @@
     <string name="discard">discard</string>
     <string name="note_saved_intent">note_saved</string>
     <string name="note_saved">note_saved</string>
+    <string name="begin_speech">Talk to yourself #8230</string>
+    <string name="voice_button_title">Voice Input</string>
+    <string name="note_title">note_title</string>
+    <string name="note_image">note_image</string>
 </resources>
