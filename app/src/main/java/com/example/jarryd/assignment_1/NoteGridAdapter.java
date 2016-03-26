@@ -66,7 +66,7 @@ import java.util.ArrayList;
         if (noteArray.get(index).note_title != null)
             holder.titleView.setText(noteArray.get(index).note_title);
         if (noteArray.get(index).image_id != null) {
-            holder.imageView.setBitmapViaBackgroundTask(context, noteArray.get(index).image_id);
+            holder.imageView.setBitmapViaBackgroundTask(context, context.getFilesDir() + "/" + noteArray.get(index).image_id + ".jpg");
         }
         // Sets a Tag in order to keep the data of the associated Note object with this view for later use
 //            notePreview.setTag(

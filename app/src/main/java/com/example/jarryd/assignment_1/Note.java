@@ -36,14 +36,15 @@ public class Note {
 
         /* Constructor for existing note read from DB for preview*/
         public Note(String note_id, String image_id, String note_title) {
-            super();
-            this.note_id = note_id;
-            this.image_id = image_id;
-            this.note_text = null;
-            this.note_title = note_title;
+                super();
+                this.note_id = note_id;
+                this.image_id = image_id;
+                this.note_text = null;
+//            if(note_title != null){
+                this.note_title = note_title;
 //            }
-//            else {
-//                setTitleAsHead();
+//            else{
+//                    setTitleAsHead();
 //            }
         }
 
@@ -62,6 +63,14 @@ public class Note {
         public String getImage_id(){
             return image_id;
         }
+
+        public String getNote_text(){
+            return note_text;
+        }
+
+    public String getNote_title(){
+        return note_title;
+    }
 
         public void setNote_id(String note_id) {
             this.note_id = note_id;

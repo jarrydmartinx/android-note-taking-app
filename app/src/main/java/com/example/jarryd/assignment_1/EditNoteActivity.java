@@ -60,7 +60,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
 
         //Load note from Database
-        note = MainActivity.noteDAO.loadNote(received_note_id);
+        note = noteDAO.loadNote(received_note_id);
 
 
     /* Instantiate widgets*/
@@ -272,7 +272,7 @@ public class EditNoteActivity extends AppCompatActivity {
         else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
             System.out.println("imageID is " + note.getImage_id());
             noteImageView.invalidate();
-            noteImageView.setImageBitmap(BitmapFactory.decodeFile(note.getImage_id()));
+            noteImageView.setImageBitmap(BitmapFactory.decodeFile(getFilesDir() +"/" + note.getImage_id()));
 //            noteImageView.setBitmapViaBackgroundTask(context, imageFile);
         }
 

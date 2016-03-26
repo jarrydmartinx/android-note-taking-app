@@ -164,8 +164,7 @@ public class MainActivity extends AppCompatActivity {
         Note newNote = new Note();
         noteDAO.saveNewNoteData(newNote);
         Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
-        launchEditNoteIntent.putExtra(
-                context.getString(R.string.note_saved_intent),"note_saved");
+        launchEditNoteIntent.putExtra(context.getString(R.string.selected_note_id),newNote.getNote_id());
         startActivity(launchEditNoteIntent);
     }
 
