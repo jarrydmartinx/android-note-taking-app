@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -59,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
 
         /* Load all notes into an Array to back the NoteAdapter */
         this.noteArray = noteDAO.getAllSavedNotes();
+        for (Note aNote:noteArray){
+            System.out.println(aNote.note_title);
+        }
+
 
         /* Click listener for responding to notePreview click, for launching EditNoteActivity */
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
@@ -87,42 +92,37 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position,
                                                   long id, boolean checked) {
-//                noteGridView.getItemAtPosition(posString received_note_id = editNoteIntent.getStringExtra(context.getString(R.string.selected_note_id))ition);
-//
-//
-//                setBackgroundColor(Color.parseColor("#FF4500"));
-                System.out.println("########Checked item count is: " + noteGridView.getCheckedItemCount() + " ##################");// noteGridView.setItemChecked(position, true);
+
             }
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 // Respond to clicks on the actions in the CAB
-                System.out.println("checkedItems array about to be stored. Checked Item count" + noteGridView.getCheckedItemCount());
                 //final SparseBooleanArray  checkedItems = noteGridView.getCheckedItemPositions();
                 int item_id = item.getItemId();
 
-//                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-//                    alertBuilder.setMessage(R.string.delete_confirm_message)
-//                            .setTitle(R.string.delete_confirm_title)
-//                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-//
-//                                public void onClick(DialogInterface dialogInterface, int item_id) {
-//                                    System.out.println("Delete checked notes about to be called. Checked Item count" + noteGridView.getCheckedItemCount());
-//                                    deleteCheckedNotes(noteGridView.getCheckedItemPositions());
-//                                    System.out.println("Delete checked notes called. Checked Item count" + noteGridView.getCheckedItemCount());
-//                                    noteGridAdapter.notifyDataSetChanged();
-//                                    noteGridView.invalidateViews();
-//                                }
-//                            })
-//                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialogInterface, int item_id) {
-//                                    //Delete Action Cancelled By the User
-//                                }
-//                            });
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+                    alertBuilder.setMessage(R.string.delete_confirm_message)
+                            .setTitle(R.string.delete_confirm_title)
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialogInterface, int item_id) {
+                                    noteDAO.deleteMultiNoteDataAndImage(noteGridAdapter.checkedNotes);
+                                    noteArray.removeAll(noteGridAdapter.checkedNotes);
+                                    noteGridAdapter.notifyDataSetChanged();
+                                    noteGridView.invalidateViews();
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogInterface, int item_id) {
+                                    //Delete Action Cancelled By the User
+                                }
+                            });
                 if (item_id == R.id.delete) {
-//                    AlertDialog alertDialog = alertBuilder.create();
-//                    alertDialog.show();
-                    deleteCheckedNotes(noteGridView.getCheckedItemPositions());
+                    noteGridAdapter.updateCheckedNoteList(noteGridView.getCheckedItemPositions());
+                    AlertDialog alertDialog = alertBuilder.create();
+                    alertDialog.show();
+
                     mode.finish(); // Action picked, so close the CAB
                     return true;
                 } else {
@@ -210,28 +210,6 @@ public class MainActivity extends AppCompatActivity {
 //        return false;
 //    }
 
-    public void deleteCheckedNotes(SparseBooleanArray positions) {
-        System.out.println("#######bool_array.size() = " + positions.size() + "  _##################################################______");
-        System.out.println("#######note_array.size(deleteCheckedNotes) = " + noteArray.size() + "  _##################################################______");
-        System.out.println("####### _##################################################______");
 
-        System.out.println("######: " + positions.toString());
-        for (Note aNote: noteArray) {
-            System.out.println("########: " + aNote.note_title);
-        }
-        System.out.println("######: " + noteArray);
-        int noteArrayLength =  noteArray.size();
-        ArrayList<Note> notesToDelete = new ArrayList<>();
 
-        for (int i = 0; i < noteArrayLength; i++) {
-            int note_position = noteGridAdapter.getPosition(noteArray.get(i));
-            System.out.println("#######noteArray[i] : " + positions.get(note_position) + " is checked________##################################################______");
-            if (positions.get(note_position)) {
-                notesToDelete.add(noteArray.get(i));
-                System.out.println("#######DELETE MULTIPLE MAINACTIVITY##### ONE DELETED ####### ______________");
-            }
-        }
-        noteDAO.deleteMultiNoteDataAndImage(notesToDelete);
-        noteArray.removeAll(notesToDelete);
-    }
 }

@@ -1,5 +1,6 @@
 package com.example.jarryd.assignment_1;
 import android.content.Context;
+import android.util.SparseBooleanArray;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -17,11 +18,7 @@ public interface NoteDAO {
         void deleteNoteDataAndImage(Note note);
         void deleteMultiNoteDataAndImage(ArrayList<Note> noteArrayList);
         void saveNewNoteData(Note note);
-
         void updateNoteData(Note note);
-
-
-
 }
 
 

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.util.SparseBooleanArray;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 /**
@@ -101,33 +103,20 @@ public class NoteDAOImplSQLite implements NoteDAO {
         ArrayList<Note> singleNoteArray = new ArrayList<>();
         singleNoteArray.add(note);
         deleteMultiNoteDataAndImage(singleNoteArray);
-//        SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
-//        String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " LIKE ?";
-//        // Specify arguments in placeholder order.???????????????????????????????????????????????
-//        String[] whereArgs = { note.getNote_id() };
-//       //SQL delete statement
-//        noteDB.delete(NoteDBContract.NoteEntry.TABLE_NAME, where, whereArgs);
-//
-//        System.out.println("#################note deleted in DB: note object values:" + note.getNote_id() + note.note_title + note.note_text + ", #########################");
-//
-////        if (note.getImage_id() != null) {
-////            ImageDAO imageDAO = new ImageDAOImpl(context);
-////            imageDAO.deleteNoteImageFromFile(context, note);
-////        }
     }
 
     @Override
     public void deleteMultiNoteDataAndImage(ArrayList<Note> noteArrayList) {
         SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
-        String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " IN (?)";
+        String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID;
         // Specify arguments in placeholder order.???????????????????????????????????????????????
         String[] whereArgs = new String[noteArrayList.size()];
         for (int i=0;i<noteArrayList.size();i++) {
-            whereArgs[i] = noteArrayList.get(i).note_id;
+            whereArgs[i] = "'" + noteArrayList.get(i).note_id + "'";
         }
         String[] args = { TextUtils.join(", ", whereArgs) };
         //SQL delete statement
-        noteDB.delete(NoteDBContract.NoteEntry.TABLE_NAME, where, args);
+        noteDB.execSQL("DELETE FROM " + NoteDBContract.NoteEntry.TABLE_NAME + " WHERE " + where + " IN " + "("+TextUtils.join(", ", whereArgs)+")");
     }
 
     @Override
@@ -170,8 +159,8 @@ public class NoteDAOImplSQLite implements NoteDAO {
 
     private String getStringFromCursor(Cursor cursor, String column_name){
         String attr = cursor.getString(cursor.getColumnIndexOrThrow(column_name));
-        System.out.println("getting cursor attribute:" + attr + "#######################");
         return attr;
     }
+
 
 }
