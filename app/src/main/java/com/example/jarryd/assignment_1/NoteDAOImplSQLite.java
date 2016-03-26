@@ -114,7 +114,6 @@ public class NoteDAOImplSQLite implements NoteDAO {
         for (int i=0;i<noteArrayList.size();i++) {
             whereArgs[i] = "'" + noteArrayList.get(i).note_id + "'";
         }
-        String[] args = { TextUtils.join(", ", whereArgs) };
         //SQL delete statement
         noteDB.execSQL("DELETE FROM " + NoteDBContract.NoteEntry.TABLE_NAME + " WHERE " + where + " IN " + "("+TextUtils.join(", ", whereArgs)+")");
     }

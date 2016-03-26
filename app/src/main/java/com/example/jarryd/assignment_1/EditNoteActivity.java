@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.LabeledIntent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.support.design.widget.Snackbar;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +48,7 @@ public class EditNoteActivity extends AppCompatActivity {
         Intent editNoteIntent = getIntent();
         String received_note_id = editNoteIntent.getStringExtra(context.getString(R.string.selected_note_id));
 
+
         //Load note from Database
         note = MainActivity.noteDAO.loadNote(received_note_id);
 
@@ -76,12 +79,9 @@ public class EditNoteActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
-
-
-    /*  Method to Add photos */
-
-    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private void dispatchTakePhotoIntent(String note_id) {
         Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -94,28 +94,24 @@ public class EditNoteActivity extends AppCompatActivity {
         }
 
     }
+    /*  Method to Add photos */
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    private void dispatchNoteSavedIntent(String note_id) {
+        Intent noteSavedIntent = new Intent(EditNoteActivity.this, MainActivity.class);
+        noteSavedIntent.putExtra(
+                context.getString(R.string.selected_note_id),
+                note_id);
+        startActivity(noteSavedIntent);
 
-//    String photoPath;
+    }
 
-//    private File createImageFile() throws IOException {
-//        // Create an image file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String photoFileName = "JPEG_" + timeStamp + "_";
-//
-//        File storageDir = Environment.getExternalStoragePublicDirectory(
-//                Environment.DIRECTORY_PICTURES);
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
-//        );
-//
-//        // Save a file: path for use with ACTION_VIEW intents
-//        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-//        return image;
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -159,7 +155,6 @@ public class EditNoteActivity extends AppCompatActivity {
             note.note_text = noteEditText.getText().toString();
             note.note_title = titleEditText.getText().toString();
             noteDAO.updateNoteData(note);
-            System.out.println("#######SAVE ONE EDITACTIVITY############ note_id: " + note.note_id + ", note_title: " + note.note_title + ", ______________");
             Snackbar saveSnackbar = Snackbar.make(noteEditText, "Note Saved!", Snackbar.LENGTH_LONG);
             saveSnackbar.show();
             return true;
@@ -172,8 +167,36 @@ public class EditNoteActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent keyEvent)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+
+            alertBuilder.setMessage(R.string.save_or_discard_message)
+                    .setPositiveButton(R.string.save_button_title, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int item_id) {
+                            noteDAO.updateNoteData(note);
+                            dispatchNoteSavedIntent(note.getNote_id());
+                            System.out.println("DID THIS EVEN HAPPENN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                        }
+                    })
+                    .setNegativeButton(R.string.discard, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int item_id) {
+                            Intent launchMainActivityIntent = new Intent(EditNoteActivity.this, MainActivity.class);
+                            startActivity(launchMainActivityIntent);
+                        }
+                    });
+
+            AlertDialog alertDialog = alertBuilder.create();
+            alertDialog.show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, keyEvent);
+    }
+
     public void readToVoice(){
-        //
+
+
     }
 
 }

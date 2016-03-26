@@ -1,9 +1,6 @@
 package com.example.jarryd.assignment_1;
 
 //Remember to remove tags okay! the second tag (in keys.xml and in NoteAdapter
-
-
-
 //http://developer.android.com/guide/topics/ui/menus.html#FloatingContextMenu
 
 import android.app.AlertDialog;
@@ -15,6 +12,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,6 +27,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 
 
 import java.lang.reflect.Array;
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         noteDAO = new NoteDAOImplSQLite(context);
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,14 +67,7 @@ public class MainActivity extends AppCompatActivity {
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 dispatchLaunchEditNoteIntent(position);
-
             }
-
-//            public void onItemLongClick(AdapterView parent, View view, int position, long id) {
-//                registerForContextMenu(view);
-//                openContextMenu(view);
-//
-//            }
         };
 
         /* Instantiate the main GridView Object that displays note previews*/
@@ -89,10 +80,10 @@ public class MainActivity extends AppCompatActivity {
         noteGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         noteGridView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
 
+
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position,
                                                   long id, boolean checked) {
-
             }
 
             @Override
@@ -101,29 +92,30 @@ public class MainActivity extends AppCompatActivity {
                 //final SparseBooleanArray  checkedItems = noteGridView.getCheckedItemPositions();
                 int item_id = item.getItemId();
 
-                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-                    alertBuilder.setMessage(R.string.delete_confirm_message)
-                            .setTitle(R.string.delete_confirm_title)
-                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+                alertBuilder.setMessage(R.string.delete_confirm_message)
+                        .setTitle(R.string.delete_confirm_title)
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
 
-                                public void onClick(DialogInterface dialogInterface, int item_id) {
-                                    noteDAO.deleteMultiNoteDataAndImage(noteGridAdapter.checkedNotes);
-                                    noteArray.removeAll(noteGridAdapter.checkedNotes);
-                                    noteGridAdapter.notifyDataSetChanged();
-                                    noteGridView.invalidateViews();
-                                }
-                            })
-                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialogInterface, int item_id) {
-                                    //Delete Action Cancelled By the User
-                                }
-                            });
+                            public void onClick(DialogInterface dialogInterface, int item_id) {
+                                noteDAO.deleteMultiNoteDataAndImage(noteGridAdapter.checkedNotes);
+                                noteArray.removeAll(noteGridAdapter.checkedNotes);
+                                noteGridAdapter.notifyDataSetChanged();
+                                noteGridView.invalidateViews();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int item_id) {
+                                //Delete Action Cancelled By the User
+                            }
+                        });
                 if (item_id == R.id.delete) {
                     noteGridAdapter.updateCheckedNoteList(noteGridView.getCheckedItemPositions());
                     AlertDialog alertDialog = alertBuilder.create();
                     alertDialog.show();
 
                     mode.finish(); // Action picked, so close the CAB
+
                     return true;
                 } else {
                     return false;
@@ -150,6 +142,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Intent noteSavedIntent = getIntent();
+        String stringExtra = noteSavedIntent.getStringExtra(getString(R.string.note_saved_intent));
+        if (stringExtra != null){
+            System.out.println("We arrived at the snackbar yO!!!");
+            Snackbar saveSnackbar = Snackbar.make(noteGridView, "Note Saved!", Snackbar.LENGTH_LONG);
+            saveSnackbar.show();
+        }
     }
 
     private void dispatchLaunchEditNoteIntent(int position) {
@@ -166,8 +165,7 @@ public class MainActivity extends AppCompatActivity {
         noteDAO.saveNewNoteData(newNote);
         Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
         launchEditNoteIntent.putExtra(
-                context.getString(R.string.selected_note_id),
-                newNote.getNote_id());
+                context.getString(R.string.note_saved_intent),"note_saved");
         startActivity(launchEditNoteIntent);
     }
 
@@ -194,6 +192,10 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
 //
 //    @Override
 //    public boolean onContextItemSelected(MenuItem item) {

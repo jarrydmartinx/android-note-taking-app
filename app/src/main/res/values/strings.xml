@@ -15,4 +15,8 @@
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="enter_title_message">Give your note a title: </string>
- </resources>
+    <string name="save_or_discard_message">Would you like to save your changes?</string>
+    <string name="discard">discard</string>
+    <string name="note_saved_intent">note_saved</string>
+    <string name="note_saved">note_saved</string>
+</resources>
