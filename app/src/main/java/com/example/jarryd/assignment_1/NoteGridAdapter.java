@@ -47,7 +47,6 @@ import java.util.ArrayList;
             /* Inflate (render) the layout file */
                     LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                     notePreview = inflater.inflate(layout_id, parent, false);
-                System.out.println("############new view inflated###################################");
                     holder = new ViewHolder();
                     holder.titleView = (TextView) notePreview.findViewById(R.id.noteTextView);
                     holder.imageView = (MyImageView) notePreview.findViewById(R.id.noteImageView);

@@ -28,5 +28,8 @@
         android:stretchMode="columnWidth"
         android:layout_alignParentBottom="true"
         android:hapticFeedbackEnabled="true"
-        android:choiceMode="multipleChoiceModal" />
+        android:listSelector="@color/orangered"
+        android:choiceMode="multipleChoiceModal"
+
+        />
 </RelativeLayout>

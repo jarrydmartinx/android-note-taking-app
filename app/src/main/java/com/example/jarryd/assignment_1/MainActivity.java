@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -56,13 +57,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         /* Load all notes into an Array to back the NoteAdapter */
         this.noteArray = noteDAO.getAllSavedNotes();
-
-        System.out.println("########MAINACTIVITY ONCREATE GET ALL SAVED NOTES INSTANCE##########  Note Array is: " + noteArray.size() + "notes long.#########################");
-        System.out.println("########NOTE ARRAY VALUES: " + noteArray.get(0).getNote_id() + ", and second element: " + noteArray.get(1).getNote_id() + "#########################");
 
         /* Click listener for responding to notePreview click, for launching EditNoteActivity */
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
@@ -78,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
 //            }
         };
 
-
         /* Instantiate the main GridView Object that displays note previews*/
         noteGridView = (GridView) findViewById(R.id.noteGridView);
 
@@ -92,7 +87,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position,
                                                   long id, boolean checked) {
-               //
+//                noteGridView.getItemAtPosition(posString received_note_id = editNoteIntent.getStringExtra(context.getString(R.string.selected_note_id))ition);
+//
+//
+//                setBackgroundColor(Color.parseColor("#FF4500"));
+                System.out.println("########Checked item count is: " + noteGridView.getCheckedItemCount() + " ##################");// noteGridView.setItemChecked(position, true);
             }
 
             @Override
@@ -104,8 +103,11 @@ public class MainActivity extends AppCompatActivity {
                     alertBuilder.setMessage(R.string.delete_confirm_message)
                             .setTitle(R.string.delete_confirm_title)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+
                                 public void onClick(DialogInterface dialogInterface, int item_id) {
+                                    System.out.println("Delete checked notes about to be called. Checked Item count" + noteGridView.getCheckedItemCount());
                                     deleteCheckedNotes(noteGridView.getCheckedItemPositions());
+                                    System.out.println("Delete checked notes called. Checked Item count" + noteGridView.getCheckedItemCount());
                                     noteGridAdapter.notifyDataSetChanged();
                                     noteGridView.invalidateViews();
                                 }
@@ -135,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-
             }
 
             @Override
@@ -190,32 +191,31 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        int item_id = item.getItemId();
-        Note note = (Note) noteGridView.getSelectedItem();
-
-        if (item_id == R.id.delete) {
-            noteDAO.deleteNoteDataAndImage(note);
-            noteArray.remove(note);
-            noteGridAdapter.notifyDataSetChanged();
-            noteGridView.invalidateViews();
-            return true;
-        }
-        return false;
-    }
+//
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        int item_id = item.getItemId();
+//        Note note = (Note) noteGridView.getSelectedItem();
+//
+//        if (item_id == R.id.delete) {
+//            noteDAO.deleteNoteDataAndImage(note);
+//            noteArray.remove(note);
+//            noteGridAdapter.notifyDataSetChanged();
+//            noteGridView.invalidateViews();
+//            return true;
+//        }
+//        return false;
+//    }
 
     public void deleteCheckedNotes(SparseBooleanArray positions) {
-        Note note;
-
-        for (int i = 0; i < positions.size(); i++) {
-            if(positions.get(i)) {
-                note = (Note) noteGridView.getItemAtPosition(i);
-                System.out.println("#######DELETE MULTIPLE MAINACTIVITY############ note_id: " + note.note_id + ", note_title: " + note.note_title + ", ______________");
-                noteDAO.deleteNoteDataAndImage(note);
-                noteArray.remove(note);
+        System.out.println("#######bool_array.size() = " + positions.size() + "  _##################################################______");
+        System.out.println("#######note_array.size() = " + noteArray.size() + "  _##################################################______");
+        for (int i = 0; i < noteArray.size(); i++) {
+            System.out.println("#######note wiht id : " + positions.get(i) + " is checked________##################################################______");
+            if (positions.get(i))
+                noteDAO.deleteNoteDataAndImage(noteArray.get(i));
+                noteArray.remove(i);
+                System.out.println("#######DELETE MULTIPLE MAINACTIVITY##### ONE DELETED ####### ______________");
             }
         }
     }
-}
