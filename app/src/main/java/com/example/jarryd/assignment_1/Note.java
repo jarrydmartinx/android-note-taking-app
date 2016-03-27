@@ -1,7 +1,9 @@
 package com.example.jarryd.assignment_1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -95,5 +97,16 @@ public class Note {
             this.note_title = note_title;
         }
 
+    public Intent createShareNoteIntent(){
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("*/*");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, note_title);
+
+        shareIntent.putExtra(Intent.EXTRA_TEXT, note_text);
+        if (image_id != null) {
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(image_id));
+        }
+    return shareIntent;
+    }
 
 }

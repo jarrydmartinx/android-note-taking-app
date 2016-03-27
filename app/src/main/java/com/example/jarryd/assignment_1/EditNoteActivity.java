@@ -245,17 +245,8 @@ public class EditNoteActivity extends AppCompatActivity {
         }
     }
 
-    private Intent dispatchShareIntent(Note note){
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("*/*");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, note.note_title);
-
-        shareIntent.putExtra(Intent.EXTRA_TEXT, note.note_text);
-        if (note.getImage_id() != null) {
-            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(note.getImage_id()));
-        }
-        startActivity(Intent.createChooser(shareIntent, "Share your note"));
-        return shareIntent;
+    private void dispatchShareIntent(Note note){
+        startActivity(Intent.createChooser(note.createShareNoteIntent(), "Share your note"));
     }
 
     @Override

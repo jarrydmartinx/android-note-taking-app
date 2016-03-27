@@ -23,4 +23,5 @@
     <string name="voice_button_title">Voice Input</string>
     <string name="note_title">note_title</string>
     <string name="note_image">note_image</string>
+    <string name="cant_share_multiple">You can only share one note at a time!</string>
 </resources>

@@ -2,6 +2,8 @@ package com.example.jarryd.assignment_1;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
         this.context = context;
         this.layout_id = layout_id;
         this.noteArray = noteArray;
+        this.checkedNotes= null;
     }
 
     @Override
@@ -68,6 +71,14 @@ import java.util.ArrayList;
         if (noteArray.get(index).image_id != null) {
             holder.imageView.setBitmapViaBackgroundTask(context, context.getFilesDir() + "/" + noteArray.get(index).image_id + ".jpg");
         }
+        if(checkedNotes != null){
+            if(checkedNotes.contains(noteArray.get(index))){
+                notePreview.setBackgroundColor(ContextCompat.getColor(context,R.color.orangered));
+            } else{
+                notePreview.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
+            }
+        }
+
         // Sets a Tag in order to keep the data of the associated Note object with this view for later use
 //            notePreview.setTag(
 //                    context.getResources().getInteger(R.integer.view_tag_for_note),

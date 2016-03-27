@@ -43,11 +43,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Sets activity layout and initializes toolbar
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Initializes the DAO that accesses the note data in SQLite database
         noteDAO = new NoteDAOImplSQLite(context);
 
+        //Initializes the floating action button (to create new note)
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,40 +60,43 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /* Load all notes into an Array to back the NoteAdapter */
+        /* Loads all Notes in DB into an ArrayList to back the NoteAdapter */
         this.noteArray = noteDAO.getAllSavedNotes();
         for (Note aNote:noteArray){
             System.out.println(aNote.note_title);
         }
 
-
-        /* Click listener for responding to notePreview click, for launching EditNoteActivity */
+        /* Listener for responding to user clicks on an individual note preview, launches EditNoteActivity */
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 dispatchLaunchEditNoteIntent(position);
             }
         };
 
-        /* Instantiate the main GridView Object that displays note previews*/
+        /* Initializes GridView that displays note previews*/
         noteGridView = (GridView) findViewById(R.id.noteGridView);
 
-        /* Instantiate NoteAdapter that sits bw data and GridView */
+        /* Instantiate NoteAdapter that connects the Note ArrayList with the GridView */
         noteGridAdapter = new NoteGridAdapter(this, R.layout.note_preview, noteArray);
         noteGridView.setAdapter(noteGridAdapter);
+
+        //Set Listeners for OnClick and OnLongClick Item selection (MultiChoice Mode begins on long click)
         noteGridView.setOnItemClickListener(notePreviewClickedListener);
         noteGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         noteGridView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
 
-
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position,
                                                   long id, boolean checked) {
+                //Updates the list of checked notes maintained by the Adapter
+                noteGridAdapter.updateCheckedNoteList(noteGridView.getCheckedItemPositions());
+                //Regenerates note Previews so that checked items are highlighted
+                noteGridView.invalidateViews();
             }
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 // Respond to clicks on the actions in the CAB
-                //final SparseBooleanArray  checkedItems = noteGridView.getCheckedItemPositions();
                 int item_id = item.getItemId();
 
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
@@ -116,6 +123,14 @@ public class MainActivity extends AppCompatActivity {
 
                     mode.finish(); // Action picked, so close the CAB
 
+                    return true;
+                } else if (item_id == R.id.share){
+                    if (noteGridView.getCheckedItemCount() == 1){
+                        dispatchShareIntent(noteGridAdapter.checkedNotes.get(0));
+                    } else{
+                        Snackbar cantShareMultipleNotes = Snackbar.make(noteGridView, R.string.cant_share_multiple, Snackbar.LENGTH_LONG);
+                        cantShareMultipleNotes.show();
+                    }
                     return true;
                 } else {
                     return false;
@@ -168,6 +183,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(launchEditNoteIntent);
     }
 
+    private void dispatchShareIntent(Note note){
+        startActivity(Intent.createChooser(note.createShareNoteIntent(), "Share your note"));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -188,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int item_id = item.getItemId();
-
         return super.onOptionsItemSelected(item);
     }
 
