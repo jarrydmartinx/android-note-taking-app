@@ -84,14 +84,12 @@
             android:paddingTop="10dp"
             android:paddingLeft ="10dp"
             android:paddingRight = "10dp"
-            android:adjustViewBounds="false"
+            android:adjustViewBounds="true"
             android:background="@color/lavender"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentStart="false"
-            android:requiresFadingEdge="vertical"
+            android:layout_centerHorizontal="true"
             android:hapticFeedbackEnabled="true"
-
+            android:scaleType="fitCenter"
             >
         </com.example.jarryd.assignment_1.MyImageView>
 

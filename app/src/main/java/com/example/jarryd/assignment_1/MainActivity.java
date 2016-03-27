@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         /* Initializes GridView that displays note previews*/
         noteGridView = (GridView) findViewById(R.id.noteGridView);
-
+        noteGridView.invalidateViews();
         /* Instantiate NoteAdapter that connects the Note ArrayList with the GridView */
         noteGridAdapter = new NoteGridAdapter(this, R.layout.note_preview, noteArray);
         noteGridView.setAdapter(noteGridAdapter);

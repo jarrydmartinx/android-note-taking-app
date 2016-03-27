@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
@@ -24,21 +25,22 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
         private String image_id;
         private ImageDAO imageDAO;
         private Context context;
+        private MyImageView imageView;
 
         public BackgroundBitmapTask(Context context, MyImageView noteImageView, String image_id) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             this.image_id = image_id;
-            noteImageViewRef = new WeakReference<>(noteImageView);
-            this.imageDAO = new ImageDAOImpl(context);
             this.context = context;
+            noteImageViewRef = new WeakReference<>(noteImageView);
+            imageDAO = new ImageDAOImpl(context);
+            imageView = noteImageView;
         }
-
 
         // An AsyncTask method. Process the photo in a background thread rather than the UI thread
         @Override
         protected Bitmap doInBackground(Integer... params) {
             data = params[0];
-            return imageDAO.getNoteImageFromFile(context, image_id, 100, 100);
+            return imageDAO.getNoteImageFromFile(image_id, imageView.getMeasuredHeight(), imageView.getMeasuredWidth());
 //            return decodeSampledBitmapFromResource(resId, context, 100, 100);
         }
 

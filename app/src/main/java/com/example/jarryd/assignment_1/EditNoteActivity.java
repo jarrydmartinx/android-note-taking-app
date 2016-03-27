@@ -44,18 +44,24 @@ public class EditNoteActivity extends AppCompatActivity {
     Context context;
     Note note;
     NoteDAO noteDAO;
+    ImageDAO imageDAO;
     EditText noteEditText;
     MyImageView noteImageView;
     EditText titleEditText;
     ShareActionProvider shareActionProvider;
+    int layoutWidth;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
 
+
         context = getApplicationContext();
         noteDAO = new NoteDAOImplSQLite(context);
+        imageDAO = new ImageDAOImpl(context);
 
     /* Get Intent Message */
         Intent editNoteIntent = getIntent();
@@ -74,41 +80,29 @@ public class EditNoteActivity extends AppCompatActivity {
         titleEditText.setText(note.note_title, TextView.BufferType.EDITABLE);
         noteEditText.setText(note.note_text, TextView.BufferType.EDITABLE);
         //here you're reloading the image afresh, that's fine
-        if (note.image_id != null) {
-            noteImageView.setBitmapViaBackgroundTask(getApplicationContext(), note.image_id);
+        if (note.getImage_id() != null) {
+            noteImageView.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
+            noteImageView.setBitmapViaBackgroundTask(context, note.image_id);
+            System.out.println("########ONCREATE EDITNOTEACTIVITY###########  width is :    " +noteImageView.getMeasuredWidth()+
+                    "   height is :    " +noteImageView.getMeasuredHeight());
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchTakePhotoIntent(note);
+                dispatchImageCaptureIntent(note);
             }
         });
 
         //Set up an input method manager and listeners to control showing/hiding of keyboard
-        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        setListenersForEditText(inputMethodManager, noteEditText);
-        setListenersForEditText(inputMethodManager, titleEditText);
-    }
-
-
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-
-    private void dispatchTakePhotoIntent(Note note) {
-        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePhotoIntent.resolveActivity(getPackageManager()) != null) {
-            note.image_id = "JPEG_IMAGE_" + note.note_id + "_";
-            File imageFile = new File(context.getFilesDir(), note.image_id);
-            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
-
-
-            startActivityForResult(takePhotoIntent, REQUEST_IMAGE_CAPTURE);
-
-
-        }
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        TextViewListenerHelper textViewListenerHelper = new TextViewListenerHelperImpl(inputMethodManager);
+        textViewListenerHelper.setListenersForEditText(noteEditText);
+        textViewListenerHelper.setListenersForEditText(titleEditText);
 
     }
+
 
     private void dispatchNoteSavedIntent(String note_id) {
         Intent noteSavedIntent = new Intent(EditNoteActivity.this, MainActivity.class);
@@ -145,7 +139,6 @@ public class EditNoteActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialogInterface, int item_id) {
                             noteDAO.deleteNoteDataAndImage(note);
-                            System.out.println("#######DELETE ONE EDIT############ note_id: " + note.note_id + ", note_title: " + note.note_title + ", ______________");
                             Intent launchMainActivityIntent = new Intent(EditNoteActivity.this, MainActivity.class);
                             startActivity(launchMainActivityIntent);
                         }
@@ -161,10 +154,8 @@ public class EditNoteActivity extends AppCompatActivity {
         } else if (item_id == R.id.save) {
             note.note_text = noteEditText.getText().toString();
             note.note_title = titleEditText.getText().toString();
-            System.out.println("#################### Note title is null? " + note.note_title == null + "####### title text in box was " + titleEditText.getText().toString() + "______________________________");
 
             noteDAO.updateNoteData(note);
-            System.out.println("###########################UPDATE NOTE DATA WAS CALLED______________________________");
             Snackbar saveSnackbar = Snackbar.make(noteEditText, "Note Saved!", Snackbar.LENGTH_LONG);
             saveSnackbar.show();
             return true;
@@ -232,7 +223,6 @@ public class EditNoteActivity extends AppCompatActivity {
     /**
      * Showing google speech input dialog
      */
-    static final int REQUEST_VOICE_INPUT = 1;
 
     private void dispatchSpeechInputIntent() {
         Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -242,7 +232,7 @@ public class EditNoteActivity extends AppCompatActivity {
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 getString(R.string.begin_speech));
         try {
-            startActivityForResult(speechRecognizerIntent, REQUEST_VOICE_INPUT);
+            startActivityForResult(speechRecognizerIntent, getResources().getInteger(R.integer.REQUEST_VOICE_INPUT));
         } catch (ActivityNotFoundException a) {
             Snackbar speechSnackbar = Snackbar.make(noteEditText, "Speech Input is not available on your device", Snackbar.LENGTH_LONG);
             speechSnackbar.show();
@@ -253,61 +243,34 @@ public class EditNoteActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(note.createShareNoteIntent(), "Share your note"));
     }
 
+    private void dispatchImageCaptureIntent(Note note){
+        startActivityForResult(imageDAO.createImageCaptureIntent(note), getResources().getInteger(R.integer.REQUEST_IMAGE_CAPTURE));
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         /**
-         * Receiving speech input
+         * Receives the transcribed string from the Voice Input
          * */
-        if (requestCode == REQUEST_VOICE_INPUT && resultCode == RESULT_OK && data != null) {
+        if (requestCode == getResources().getInteger(R.integer.REQUEST_VOICE_INPUT) && resultCode == RESULT_OK && data != null) {
             ArrayList<String> activityResult =
                     data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             noteEditText.append(activityResult.get(0));
-        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            /**
+             * Receiving the saved photo from the Hardware Camera
+             * */
+        } else if (requestCode == getResources().getInteger(R.integer.REQUEST_IMAGE_CAPTURE) && resultCode == RESULT_OK) {
             System.out.println("imageID is " + note.getImage_id());
-            noteImageView.invalidate();
-            noteImageView.setImageBitmap(BitmapFactory.decodeFile(getFilesDir() + "/" + note.getImage_id()));
-//            noteImageView.setBitmapViaBackgroundTask(context, imageFile);
+            noteImageView.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
+            noteImageView.setBitmapViaBackgroundTask(context, note.getImage_id());
+            System.out.println("###########ON RECEIVE FROM CAMERA########  width is :    " + noteImageView.getMeasuredWidth() +
+                    "   height is :    " + noteImageView.getMeasuredHeight());
         }
 
     }
 
-    private void setListenersForEditText(InputMethodManager inputMethodManager, EditText editText){
-        setOnClickListenerForEditText(inputMethodManager, editText);
-        setOnChangeFocusListenerForEditText(inputMethodManager, editText);
-        setOnEditorActionListenerForEditText(inputMethodManager, editText);
-    }
 
-    private void setOnClickListenerForEditText(final InputMethodManager imm, EditText editText) {
-        editText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View editText) {
-                imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
-            }
-        });
-    }
-
-    private void setOnChangeFocusListenerForEditText(final InputMethodManager imm, EditText editText) {
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View editText, boolean hasFocus) {
-                imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
-            }
-        });
-    }
-
-    private void setOnEditorActionListenerForEditText(final InputMethodManager imm, final TextView editText) {
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView editText, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
 
 }
 

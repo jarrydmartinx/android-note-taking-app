@@ -73,7 +73,10 @@ import java.util.ArrayList;
             holder.titleView.setText(noteArray.get(index).note_title);
         }
         if (noteArray.get(index).image_id != null) {
-            holder.imageView.setBitmapViaBackgroundTask(context, context.getFilesDir() + "/" + noteArray.get(index).image_id + ".jpg");
+            notePreview.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
+            holder.imageView.setBitmapViaBackgroundTask(context, noteArray.get(index).image_id);
+            System.out.println("############ON GETVIEW NOTE GRIDADAPTER#######  width is :    " + holder.imageView.getMeasuredWidth() +
+                    "   height is :    " + holder.imageView.getMeasuredHeight());
         }
         if(checkedNotes != null){
             if(checkedNotes.contains(noteArray.get(index))){
@@ -82,11 +85,6 @@ import java.util.ArrayList;
                 notePreview.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
             }
         }
-
-        // Sets a Tag in order to keep the data of the associated Note object with this view for later use
-//            notePreview.setTag(
-//                    context.getResources().getInteger(R.integer.view_tag_for_note),
-//                    noteArray.get(index));
 
         return notePreview;
     }
