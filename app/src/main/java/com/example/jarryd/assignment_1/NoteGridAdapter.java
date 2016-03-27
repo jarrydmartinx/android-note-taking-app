@@ -65,9 +65,13 @@ import java.util.ArrayList;
         }
 
 
-            /* Sets the title and image (if any) of the notePreview*/
-        if (noteArray.get(index).note_title != null)
+            /* Sets the title of the Note preview (if the title is empty it displays the head of the note text */
+        if(noteArray.get(index).getNote_title().isEmpty() && noteArray.get(index).getNote_text() != null){
+            holder.titleView.setText(noteArray.get(index).getNoteHead());
+        }
+        else if (noteArray.get(index).note_title != null) {
             holder.titleView.setText(noteArray.get(index).note_title);
+        }
         if (noteArray.get(index).image_id != null) {
             holder.imageView.setBitmapViaBackgroundTask(context, context.getFilesDir() + "/" + noteArray.get(index).image_id + ".jpg");
         }

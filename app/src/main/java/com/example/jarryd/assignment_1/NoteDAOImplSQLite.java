@@ -39,19 +39,57 @@ public class NoteDAOImplSQLite implements NoteDAO {
         SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
 
         //Creates a new Hash Map of values where the column names of noteDB are the keys
-        ContentValues values = new ContentValues();
-        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID, note.getNote_id());
-        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID, note.getImage_id());
-        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE, note.note_title);
-        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note.note_text);
+        ContentValues values = createHashMapFromNoteData(note);
 
         noteDB.insert(NoteDBContract.NoteEntry.TABLE_NAME, null, values);
         System.out.println("#################new note put in DB: " + values + ", #########################");
     }
 
+
+    @Override
+    public void updateNoteData(Note note) {
+        SQLiteDatabase noteDB = noteDBHelper.getReadableDatabase();
+
+        // Create a hash map where DB column names are keys and note member fields are the values
+        // Updates the stored value of every field of the note object on which updateNote is called
+        ContentValues values = createHashMapFromNoteData(note);
+
+        // Which row to update, based on the ID
+        String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " LIKE ?";
+        String[] whereArgs = {note.getNote_id()};
+
+        noteDB.update(NoteDBContract.NoteEntry.TABLE_NAME, values, where, whereArgs);
+
+    }
+
+    @Override
+    public ArrayList<Note> getAllSavedNotes() {
+        ArrayList<Note> noteList = new ArrayList<>();
+        SQLiteDatabase noteDB = noteDBHelper.getReadableDatabase();
+
+        Cursor cursor = noteDB.query(
+                NoteDBContract.NoteEntry.TABLE_NAME,  // The table to query
+                null,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                 // The sort order
+        );
+
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            Note loadedNote = getNoteFromCursor(cursor);
+            noteList.add(loadedNote);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return noteList;
+    }
+
     @Override
     public Note loadNote(String note_id) {
-        Note note = new Note();
         SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
 
         String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " LIKE ?";
@@ -68,35 +106,12 @@ public class NoteDAOImplSQLite implements NoteDAO {
         );
 
         cursor.moveToFirst();
-        note.note_id = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID);
-        note.image_id = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID);
-        note.note_title = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE);
-        note.note_text = getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT);
+        Note loadedNote = getNoteFromCursor(cursor);
         cursor.close();
-
-        return note;
+        return loadedNote;
     }
 
-    @Override
-    public void updateNoteData(Note note) {
-        SQLiteDatabase noteDB = noteDBHelper.getReadableDatabase();
 
-        // Create a hash map where DB column names are keys and note member fields are the values
-        // Updates the stored value of every field of the note object on which updateNote is called
-        ContentValues values = new ContentValues();
-        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID, note.getNote_id());
-        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID, note.getImage_id());
-        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE, note.note_title);
-        values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note.note_text);
-
-        // Which row to update, based on the ID
-        String where = NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID + " LIKE ?";
-        String[] whereArgs = {note.getNote_id()};
-
-        noteDB.update(NoteDBContract.NoteEntry.TABLE_NAME, values, where, whereArgs);
-        System.out.println("#################note updated in DB: " + values + ", #########################");
-
-    }
 
     @Override
     public void deleteNoteDataAndImage(Note note) {
@@ -115,48 +130,33 @@ public class NoteDAOImplSQLite implements NoteDAO {
             whereArgs[i] = "'" + noteArrayList.get(i).note_id + "'";
         }
         //SQL delete statement
-        noteDB.execSQL("DELETE FROM " + NoteDBContract.NoteEntry.TABLE_NAME + " WHERE " + where + " IN " + "("+TextUtils.join(", ", whereArgs)+")");
+        noteDB.execSQL("DELETE FROM " + NoteDBContract.NoteEntry.TABLE_NAME + " WHERE " + where + " IN " + "(" + TextUtils.join(", ", whereArgs) + ")");
     }
 
-    @Override
-    public ArrayList<Note> getAllSavedNotes() {
-        ArrayList<Note> noteList = new ArrayList<>();
-        SQLiteDatabase noteDB = noteDBHelper.getReadableDatabase();
 
-        // Define a projection that specifies which columns from the database (CURRENTLY USING ALL COLUMNS BUT REALLY SHOULD ONLY USE NOTE TITLES WHEN LOADING FROM STORAGE
-        // you will actually use after this query.
-        String[] proj = {
-                NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID,
-                NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID,
-                NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE
-        };
 
-        Cursor cursor = noteDB.query(
-                NoteDBContract.NoteEntry.TABLE_NAME,  // The table to query
-                proj,                               // The columns to return
-                null,                                // The columns for the WHERE clause
-                null,                            // The values for the WHERE clause
-                null,                                     // don't group the rows
-                null,                                     // don't filter by row groups
-                null                                 // The sort order
-        );
-
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
-            Note loadedNote = new Note(
-                            getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID),
-                            getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID),
-                            getStringFromCursor(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE));
-            noteList.add(loadedNote);
-            System.out.println(loadedNote.note_id);
-            cursor.moveToNext();
+        private ContentValues createHashMapFromNoteData(Note note){
+            // Create a hash map where DB column names are keys and note member fields are the values
+            // Updates the stored value of every field of the note object on which updateNote is called
+            ContentValues values = new ContentValues();
+            values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID, note.getNote_id());
+            values.put(NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID, note.getImage_id());
+            values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE, note.getNote_title());
+            values.put(NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT, note.getNote_text());
+            return values;
         }
-        cursor.close();
 
-        return noteList;
+        private Note getNoteFromCursor(Cursor cursor) {
+        Note loadedNote = new Note(
+                getStringFromCursorColumn(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_ID),
+                getStringFromCursorColumn(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_IMAGE_ID),
+                getStringFromCursorColumn(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TITLE),
+                getStringFromCursorColumn(cursor, NoteDBContract.NoteEntry.COLUMN_NAME_NOTE_TEXT)
+        );
+        return loadedNote;
     }
 
-    private String getStringFromCursor(Cursor cursor, String column_name){
+    private String getStringFromCursorColumn(Cursor cursor, String column_name){
         String attr = cursor.getString(cursor.getColumnIndexOrThrow(column_name));
         return attr;
     }

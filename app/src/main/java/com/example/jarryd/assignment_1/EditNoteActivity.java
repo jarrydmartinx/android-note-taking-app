@@ -159,7 +159,10 @@ public class EditNoteActivity extends AppCompatActivity {
         } else if (item_id == R.id.save) {
             note.note_text = noteEditText.getText().toString();
             note.note_title = titleEditText.getText().toString();
+            System.out.println("#################### Note title is null? "+note.note_title == null+"####### title text in box was " + titleEditText.getText().toString() + "______________________________");
+
             noteDAO.updateNoteData(note);
+            System.out.println("###########################UPDATE NOTE DATA WAS CALLED______________________________");
             Snackbar saveSnackbar = Snackbar.make(noteEditText, "Note Saved!", Snackbar.LENGTH_LONG);
             saveSnackbar.show();
             return true;
