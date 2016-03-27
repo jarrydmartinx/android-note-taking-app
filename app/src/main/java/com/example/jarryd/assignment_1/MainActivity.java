@@ -48,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Initializes the DAO that accesses the note data in SQLite database
-        noteDAO = new NoteDAOImplSQLite(context);
-
         //Initializes the floating action button (to create new note)
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -60,9 +57,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Initializes the DAO that accesses the note data in SQLite database
+        noteDAO = new NoteDAOImplSQLite(context);
+
         /* Loads all Notes in DB into an ArrayList to back the NoteAdapter */
         this.noteArray = noteDAO.getAllSavedNotes();
-        for (Note aNote:noteArray){
+        for (Note aNote : noteArray) {
             System.out.println(aNote.note_title);
         }
 
@@ -84,6 +84,14 @@ public class MainActivity extends AppCompatActivity {
         noteGridView.setOnItemClickListener(notePreviewClickedListener);
         noteGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         noteGridView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                // Inflate the menu for the CAB
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.menu_main_context, menu);
+                return true;
+            }
 
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position,
@@ -120,14 +128,12 @@ public class MainActivity extends AppCompatActivity {
                     noteGridAdapter.updateCheckedNoteList(noteGridView.getCheckedItemPositions());
                     AlertDialog alertDialog = alertBuilder.create();
                     alertDialog.show();
-
                     mode.finish(); // Action picked, so close the CAB
-
                     return true;
-                } else if (item_id == R.id.share){
-                    if (noteGridView.getCheckedItemCount() == 1){
+                } else if (item_id == R.id.share) {
+                    if (noteGridView.getCheckedItemCount() == 1) {
                         dispatchShareIntent(noteGridAdapter.checkedNotes.get(0));
-                    } else{
+                    } else {
                         Snackbar cantShareMultipleNotes = Snackbar.make(noteGridView, R.string.cant_share_multiple, Snackbar.LENGTH_LONG);
                         cantShareMultipleNotes.show();
                     }
@@ -135,14 +141,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     return false;
                 }
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                // Inflate the menu for the CAB
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.menu_main_context, menu);
-                return true;
             }
 
             @Override
@@ -156,36 +154,8 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        Intent noteSavedIntent = getIntent();
-        String stringExtra = noteSavedIntent.getStringExtra(getString(R.string.note_saved_intent));
-        if (stringExtra != null){
-            System.out.println("We arrived at the snackbar yO!!!");
-            Snackbar saveSnackbar = Snackbar.make(noteGridView, "Note Saved!", Snackbar.LENGTH_LONG);
-            saveSnackbar.show();
-        }
     }
 
-    private void dispatchLaunchEditNoteIntent(int position) {
-        Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
-        launchEditNoteIntent.putExtra(
-                context.getString(R.string.selected_note_id),
-                noteArray.get(position).getNote_id()
-        );
-        startActivity(launchEditNoteIntent);
-    }
-
-    private void dispatchLaunchEditNewNoteIntent() {
-        Note newNote = new Note();
-        noteDAO.saveNewNoteData(newNote);
-        Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
-        launchEditNoteIntent.putExtra(context.getString(R.string.selected_note_id),newNote.getNote_id());
-        startActivity(launchEditNoteIntent);
-    }
-
-    private void dispatchShareIntent(Note note){
-        startActivity(Intent.createChooser(note.createShareNoteIntent(), "Share your note"));
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -210,24 +180,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void dispatchLaunchEditNoteIntent(int position) {
+        Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
+        launchEditNoteIntent.putExtra(
+                context.getString(R.string.selected_note_id),
+                noteArray.get(position).getNote_id()
+        );
+        startActivity(launchEditNoteIntent);
+    }
 
+    private void dispatchLaunchEditNewNoteIntent() {
+        Note newNote = new Note();
+        noteDAO.saveNewNoteData(newNote);
+        Intent launchEditNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
+        launchEditNoteIntent.putExtra(context.getString(R.string.selected_note_id),newNote.getNote_id());
+        startActivity(launchEditNoteIntent);
+    }
 
-//
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        int item_id = item.getItemId();
-//        Note note = (Note) noteGridView.getSelectedItem();
-//
-//        if (item_id == R.id.delete) {
-//            noteDAO.deleteNoteDataAndImage(note);
-//            noteArray.remove(note);
-//            noteGridAdapter.notifyDataSetChanged();
-//            noteGridView.invalidateViews();
-//            return true;
-//        }
-//        return false;
-//    }
-
+    private void dispatchShareIntent(Note note){
+        startActivity(Intent.createChooser(note.createShareNoteIntent(), "Share your note"));
+    }
 
 
 }
