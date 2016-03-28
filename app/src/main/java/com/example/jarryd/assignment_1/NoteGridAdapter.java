@@ -28,6 +28,7 @@ import java.util.ArrayList;
     private static class ViewHolder {
         protected TextView titleView;
         protected MyImageView imageView;
+        private String imageId;
     }
 
     public NoteGridAdapter(Context context, int layout_id, ArrayList<Note> noteArray) {
@@ -45,7 +46,7 @@ import java.util.ArrayList;
         //          System.out.println("############getView Called by Adapter, index in noteArray = " + index + ", convertView type: "+ convertView +"#############");
             /* Declare a ViewHolder object that will hold all the View objects for the Note */
         ViewHolder holder;
-        View notePreview = (View) convertView;
+        View notePreview = convertView;
 
             /* Check that a usable View object doesn't already exist */
         if (notePreview == null) {
@@ -55,35 +56,41 @@ import java.util.ArrayList;
             holder = new ViewHolder();
             holder.titleView = (TextView) notePreview.findViewById(R.id.noteTextView);
             holder.imageView = (MyImageView) notePreview.findViewById(R.id.noteImageView);
+            holder.imageId = getItem(index).getNote_id();
+            notePreview.setTag(holder);
 
-            notePreview.setTag(
-                    context.getResources().getInteger(R.integer.view_tag_for_viewholder),
-                    holder);
         } else {
-            holder = (ViewHolder) notePreview.getTag(
-                    context.getResources().getInteger(R.integer.view_tag_for_viewholder));
+            holder = (ViewHolder) notePreview.getTag();
         }
-
 
             /* Sets the title of the Note preview (if the title is empty it displays the head of the note text */
-        if(noteArray.get(index).getNote_title().isEmpty() && noteArray.get(index).getNote_text() != null){
-            holder.titleView.setText(noteArray.get(index).getNoteHead());
+        if(getItem(index).getNote_title().isEmpty() && getItem(index).getNote_text() != null){
+            holder.titleView.setText(getItem(index).getNoteHead());
         }
-        else if (noteArray.get(index).note_title != null) {
+        else if (getItem(index).getNote_title() != null) {
             holder.titleView.setText(noteArray.get(index).note_title);
         }
-        if (noteArray.get(index).image_id != null) {
-            notePreview.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
-            holder.imageView.setBitmapViaBackgroundTask(context, noteArray.get(index).image_id);
-            System.out.println("############ON GETVIEW NOTE GRIDADAPTER#######  width is :    " + holder.imageView.getMeasuredWidth() +
-                    "   height is :    " + holder.imageView.getMeasuredHeight());
-        }
-        if(checkedNotes != null){
-            if(checkedNotes.contains(noteArray.get(index))){
-                notePreview.setBackgroundColor(ContextCompat.getColor(context,R.color.orangered));
-            } else{
+        if(checkedNotes != null) {
+            if (checkedNotes.contains(getItem(index))) {
+                notePreview.setBackgroundColor(ContextCompat.getColor(context, R.color.orangered));
+            } else {
                 notePreview.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
             }
+        }
+
+        //Set the image
+        if (!holder.imageId.equals(getItem(index).getImage_id())) {
+            holder.imageView.setBitmapViaBackgroundTask(context, getItem(index).getImage_id());
+        }else{
+            holder.imageView.setImageDrawable(null);
+        }
+
+        //Set a minimum height if no picture
+        if(getItem(index).getImage_id()==null){
+            holder.titleView.setHeight(notePreview.getMeasuredWidth()*2/5);
+        }
+        else{
+            holder.titleView.setHeight(notePreview.getMeasuredWidth()/2);
         }
 
         return notePreview;

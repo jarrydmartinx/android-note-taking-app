@@ -10,7 +10,7 @@ import static com.example.jarryd.assignment_1.BackgroundBitmapTask.cancelExistin
  * Created by jarryd on 23/03/16.
  */
 public class MyImageView extends ImageView {
-
+    public boolean processFinished;
     /**
      * @param context
      */
@@ -45,6 +45,7 @@ public class MyImageView extends ImageView {
                 this.setImageDrawable(bgDrawable);
                 /* Execute Bitmap Processing in the background thread */
                 bgBmpTask.execute(this.getId());
+
             }
         }
 }

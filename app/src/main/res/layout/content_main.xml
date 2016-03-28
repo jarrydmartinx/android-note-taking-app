@@ -18,8 +18,9 @@
 
     <GridView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/noteGridView"
+        android:layoutMode="clipBounds"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -31,7 +32,7 @@
         android:layout_alignParentBottom="true"
         android:hapticFeedbackEnabled="true"
         android:listSelector="@color/orangered"
-        android:choiceMode="multipleChoiceModal"
+        android:choiceMode="multipleChoiceModal"/>
 
-        />
 </RelativeLayout>
+

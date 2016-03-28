@@ -26,6 +26,8 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
         private ImageDAO imageDAO;
         private Context context;
         private MyImageView imageView;
+        private int reqHeight;
+        private int reqWidth;
 
         public BackgroundBitmapTask(Context context, MyImageView noteImageView, String image_id) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
@@ -33,15 +35,17 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
             this.context = context;
             noteImageViewRef = new WeakReference<>(noteImageView);
             imageDAO = new ImageDAOImpl(context);
-            imageView = noteImageView;
+
+            int dim = context.getResources().getInteger(R.integer.standard_image_dim);
+            reqHeight = Math.max(dim,noteImageView.getMeasuredWidth());
+            reqWidth = Math.max(dim,noteImageView.getMeasuredHeight());
         }
 
         // An AsyncTask method. Process the photo in a background thread rather than the UI thread
         @Override
         protected Bitmap doInBackground(Integer... params) {
             data = params[0];
-            return imageDAO.getNoteImageFromFile(image_id, imageView.getMeasuredHeight(), imageView.getMeasuredWidth());
-//            return decodeSampledBitmapFromResource(resId, context, 100, 100);
+            return imageDAO.getNoteImageFromFile(image_id, reqHeight, reqWidth);
         }
 
         // An AsyncTask method. When the background photo processing is completed, the reference is checked the photo is set.
@@ -51,10 +55,11 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
                 photo = null;
             }
             if (noteImageViewRef != null && photo != null) {
-                final ImageView noteImageView = noteImageViewRef.get();
-                final BackgroundBitmapTask bmpTask = getBackgroundBitmapTask(noteImageView);
-                if (this == bmpTask && noteImageView != null) {
-                    noteImageView.setImageBitmap(photo);
+                imageView = noteImageViewRef.get();
+                final BackgroundBitmapTask bmpTask = getBackgroundBitmapTask(imageView);
+                if (this == bmpTask && imageView != null) {
+                    imageView.setImageBitmap(photo);
+                    imageView.processFinished = true;
                 }
             }
         }

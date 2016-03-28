@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_width="match_parent" android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
     android:background="@android:drawable/dialog_holo_light_frame"
     >
@@ -10,7 +10,7 @@
             "http://schemas.android.com/apk/res/android"
         android:id="@+id/noteTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textAppearance=
             "?android:attr/textAppearanceSmall"
         android:text="Untitled"

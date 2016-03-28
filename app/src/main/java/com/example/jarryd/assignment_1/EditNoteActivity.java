@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.LabeledIntent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -81,10 +83,10 @@ public class EditNoteActivity extends AppCompatActivity {
         noteEditText.setText(note.note_text, TextView.BufferType.EDITABLE);
         //here you're reloading the image afresh, that's fine
         if (note.getImage_id() != null) {
-            noteImageView.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
+            noteImageView.setImageResource(android.R.drawable.dialog_holo_light_frame);
             noteImageView.setBitmapViaBackgroundTask(context, note.image_id);
-            System.out.println("########ONCREATE EDITNOTEACTIVITY###########  width is :    " +noteImageView.getMeasuredWidth()+
-                    "   height is :    " +noteImageView.getMeasuredHeight());
+            System.out.println("########ONCREATE EDITNOTEACTIVITY####REl Layout's PARENT IS   " + ((View) noteImageView.getParent()).getParent() + "   #######  width is :    " + noteImageView.getMeasuredWidth() +
+                        "   height is :    " + noteImageView.getMeasuredHeight());
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
