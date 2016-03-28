@@ -18,18 +18,47 @@ import java.util.ArrayList;
 
 /**
  * Created by jarryd on 21/03/16.
+ * <p/>
+ * A custom Adapter that extends the ArrayAdapter class. The Adapter is backed by the data model,
+ * and ArrayList of Note objects, and feeds Views (note previews)
+ * to the main GridView UI element in MainActivity.
  */
 public class NoteGridAdapter extends ArrayAdapter<Note> {
 
+    /**
+     * The context of the instantiated Adapter
+     */
     private final Context context;
+    /**
+     * A list of notes that are checked in the Grid, for multi-choice actions
+     */
     public ArrayList<Note> checkedNotes;
+    /**
+     * The data model, all the existing notes loaded from storage
+     */
     private ArrayList<Note> noteArray;
     private Resources res;
+    /**
+     * The id of the parent layout
+     */
     private int layout_id;
+    /**
+     * The device display
+     */
     private Display display;
+    /**
+     * Holds info about the device display
+     */
     private DisplayMetrics metrics;
 
-
+    /**
+     * Constructor for the Adapter
+     *
+     * @param context
+     * @param layout_id
+     * @param noteArray
+     * @param display
+     */
     public NoteGridAdapter(Context context, int layout_id, ArrayList<Note> noteArray, Display display) {
         super(context, layout_id, noteArray);
         this.context = context;
@@ -41,13 +70,20 @@ public class NoteGridAdapter extends ArrayAdapter<Note> {
 
     }
 
+    /**
+     * Called when the Adapter refreshes a view element in the GridView object
+     *
+     * @param index       the position of the item in the Adapter
+     * @param convertView a previously used View object for possible recycling
+     * @param parent      the parent ViewGroup
+     * @return
+     */
     @Override
     public View getView(int index, View convertView, ViewGroup parent) {
 
-       /* Declare a ViewHolder object that will hold all the View objects for the Note */
+       /* Declares a ViewHolder object that will hold all the View objects for the Note */
         ViewHolder holder;
         View notePreview = convertView;
-
         Note note = getItem(index);
         boolean newViewFlag = false;
         metrics = new DisplayMetrics();
@@ -55,21 +91,16 @@ public class NoteGridAdapter extends ArrayAdapter<Note> {
 
         /* Creates a new View Object if there isn't an existing one to recycle */
         if (notePreview == null) {
-            /* Inflate (render) the layout file */
-
+            /* Inflates (render) the layout file */
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             notePreview = inflater.inflate(layout_id, parent, false);
             newViewFlag = true;
-
-
             holder = new ViewHolder();
             holder.titleView = (TextView) notePreview.findViewById(R.id.noteTitleView);
             holder.textView = (TextView) notePreview.findViewById(R.id.noteTextView);
             holder.imageView = (MyImageView) notePreview.findViewById(R.id.noteImageView);
-
             holder.imageId = note.getNote_id();
             notePreview.setTag(holder);
-
         }
         //Recycles an old View if available
         else {
@@ -93,7 +124,7 @@ public class NoteGridAdapter extends ArrayAdapter<Note> {
 
             holder.textView.setText(note.getNote_text());
             //If the Note has no Image, and an existing View is being reused by the Adapter,
-            // set the ImageDrawable to null (if an new view is being used, no image will have been set.)
+            // Sets the ImageDrawable to null (if an new view is being used, no image will have been set.)
             if (!newViewFlag) {
                 holder.imageView.setImageDrawable(null);
             }
@@ -104,11 +135,6 @@ public class NoteGridAdapter extends ArrayAdapter<Note> {
             holder.textView.setHeight(0);
             holder.imageView.setMinimumHeight(metrics.widthPixels / 4);
 
-
-//            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.textView.getLayoutParams();
-//            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,-1);
-//            holder.imageView.setLayoutParams(layoutParams);
-
             if (getItem(index).getNote_title().isEmpty()) {
                 holder.titleView.setText(note.getNoteHead());
             } else {
@@ -117,14 +143,12 @@ public class NoteGridAdapter extends ArrayAdapter<Note> {
 
             // If the ImageView in the ViewHolder isn't showing the right image for this Note, set the image from file
             if (!holder.imageId.equals(note.getImage_id())) {
-                //Set the minimum size of the imageView based on the Display Metrics of the screen
-                //This size will be used by setBitmapViaBackgroundTask for decoding down the image
-                // holder.imageView.setMinimumWidth(display, R.integer.IM_SCALE_FACTOR_GRID);
-                System.out.println("________________###########DISPLAY WIDTH IS:  " + metrics.widthPixels + "_____________________##########################");
-                holder.imageView.setBitmapViaBackgroundTask(context, note.getImage_id(), metrics.widthPixels, res.getInteger(R.integer.IM_SCALE_FACTOR_GRID));
+                holder.imageView.setBitmapViaBackgroundTask(
+                        context, note.getImage_id(),
+                        metrics.widthPixels,
+                        res.getInteger(R.integer.IM_SCALE_FACTOR_GRID));
             }
         }
-
         if (checkedNotes != null) {
             if (checkedNotes.contains(getItem(index))) {
                 notePreview.setBackgroundColor(ContextCompat.getColor(context, R.color.orangered));
@@ -132,10 +156,14 @@ public class NoteGridAdapter extends ArrayAdapter<Note> {
                 notePreview.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
             }
         }
-
         return notePreview;
     }
 
+    /**
+     * Updates the list of checked notes in the Adapter so they can be highlighted
+     *
+     * @param positions of checked notes
+     */
     public void updateCheckedNoteList(SparseBooleanArray positions) {
         this.checkedNotes = new ArrayList<>();
         for (int i = 0; i < noteArray.size(); i++) {
@@ -146,6 +174,9 @@ public class NoteGridAdapter extends ArrayAdapter<Note> {
         }
     }
 
+    /**
+     * The ViewHolder class that stores Views associated with a particular item in the Adapter
+     */
     private static class ViewHolder {
         protected TextView titleView;
         protected TextView textView;

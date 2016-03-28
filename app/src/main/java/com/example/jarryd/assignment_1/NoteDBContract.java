@@ -4,14 +4,15 @@ import android.provider.BaseColumns;
 
 /**
  * Created by jarryd on 24/03/16.
+ * <p/>
+ * Defines the Contract for the SQLite database, defines table name and column names
  */
 public final class NoteDBContract {
-
+    /**
+     * Constructor for the Contract for the SQLite database, defines table name and column names
+     */
     public NoteDBContract() {
     }
-
-        /* Defines the names and headers for tables and columns */
-        /* Make sure you understand exactly why it's good to have a contract */
 
     public static abstract class NoteEntry implements BaseColumns {
         public static final String TABLE_NAME = "notes";

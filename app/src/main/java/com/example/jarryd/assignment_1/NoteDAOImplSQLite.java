@@ -9,7 +9,12 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 
 /**
- * Created by jarryd on 24/03/16. draws on http://developer.android.com/reference/android/util/JsonReader.html, http://developer.android.com/reference/android/util/JsonWriter.html
+ * Created by jarryd on 24/03/16.
+ * This implementation draws heavily on the Android Developer Guide provided at
+ * http://developer.android.com/training/basics/data-storage/databases.html
+ * The code here is original but the structure and conception follow the guide.
+ * <p/>
+ * An implementation of the Note Data Access Object Interface with an SQLite database
  */
 public class NoteDAOImplSQLite implements NoteDAO {
     public static final String SQL_DELETE_ENTRIES =
@@ -30,6 +35,11 @@ public class NoteDAOImplSQLite implements NoteDAO {
     }
 
 
+    /**
+     * Saves the data for a newly created note to persistent storage
+     *
+     * @param note
+     */
     @Override
     public void saveNewNoteData(Note note) {
         SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
@@ -41,7 +51,11 @@ public class NoteDAOImplSQLite implements NoteDAO {
         System.out.println("#################new note put in DB: " + values + ", #########################");
     }
 
-
+    /**
+     * Updates the data in storage for a particular note on user Save action
+     *
+     * @param note
+     */
     @Override
     public void updateNoteData(Note note) {
         SQLiteDatabase noteDB = noteDBHelper.getReadableDatabase();
@@ -58,6 +72,11 @@ public class NoteDAOImplSQLite implements NoteDAO {
 
     }
 
+    /**
+     * Loads all stored notes as Note objects into an ArrayList
+     *
+     * @return ArrayList of Note objects
+     */
     @Override
     public ArrayList<Note> getAllSavedNotes() {
         ArrayList<Note> noteList = new ArrayList<>();
@@ -84,6 +103,12 @@ public class NoteDAOImplSQLite implements NoteDAO {
         return noteList;
     }
 
+    /**
+     * Loads an individual note from persistent storage
+     *
+     * @param note_id the id of the note to be loaded
+     * @return the loaded Note object
+     */
     @Override
     public Note loadNote(String note_id) {
         SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();
@@ -107,7 +132,11 @@ public class NoteDAOImplSQLite implements NoteDAO {
         return loadedNote;
     }
 
-
+    /**
+     * Deletes the passed Note from persistent storage, along with its image (if any)
+     *
+     * @param note the note to be deleted
+     */
     @Override
     public void deleteNoteDataAndImage(Note note) {
         ArrayList<Note> singleNoteArray = new ArrayList<>();
@@ -115,6 +144,12 @@ public class NoteDAOImplSQLite implements NoteDAO {
         deleteMultiNoteDataAndImage(singleNoteArray);
     }
 
+    /**
+     * Deletes all the Notes in the passed List from persistent storage,
+     * along with their images (if any)
+     *
+     * @param noteArrayList the Note objects to be deleted
+     */
     @Override
     public void deleteMultiNoteDataAndImage(ArrayList<Note> noteArrayList) {
         SQLiteDatabase noteDB = noteDBHelper.getWritableDatabase();

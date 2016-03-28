@@ -31,6 +31,23 @@ import java.util.ArrayList;
  */
 public class EditNoteActivity extends AppCompatActivity {
     /**
+     * The ShareActionProvider determines how data can be shared by the user with other apps
+     */
+    ShareActionProvider shareActionProvider;
+    /**
+     * The default Display of the hardware device being used
+     */
+    Display display;
+    /**
+     * Holds size data about the default Display
+     */
+    DisplayMetrics metrics = new DisplayMetrics();
+    //Declare Widget Objects
+    EditText noteEditText;
+    MyImageView noteImageView;
+    EditText titleEditText;
+    FloatingActionButton fab;
+    /**
      * The Context of EditNoteActivity (currently instantiated as the ApplicationContext,
      * (needed for certain methods)
      */
@@ -51,24 +68,6 @@ public class EditNoteActivity extends AppCompatActivity {
      * The Data Access Object that implements methods for accessing stored Images
      */
     private ImageDAO imageDAO;
-    /**
-     * The ShareActionProvider determines how data can be shared by the user with other apps
-     */
-    ShareActionProvider shareActionProvider;
-    /**
-     * The default Display of the hardware device being used
-     */
-    Display display;
-    /**
-     * Holds size data about the default Display
-     */
-    DisplayMetrics metrics = new DisplayMetrics();
-
-    //Declare Widget Objects
-    EditText noteEditText;
-    MyImageView noteImageView;
-    EditText titleEditText;
-    FloatingActionButton fab;
 
     /**
      * Called whenever EditNoteActivity is created

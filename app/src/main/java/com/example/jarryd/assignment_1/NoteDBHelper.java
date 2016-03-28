@@ -6,6 +6,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by jarryd on 26/03/16.
+ * This implementation draws heavily on the Android Developer Guide provided at
+ * http://developer.android.com/training/basics/data-storage/databases.html
+ * <p/>
+ * Helper class for accessing instances of the SQLite database
  */
 public class NoteDBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "Notes.db";
@@ -27,13 +31,10 @@ public class NoteDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase noteDB) {
         noteDB.execSQL(NoteDAOImplSQLite.SQL_CREATE_ENTRIES);
-        System.out.println("__________________________DATABASE CREATED______________________________________");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase noteDB, int oldVersion, int newVersion) {
-        // This database is only a cache for online data, so its upgrade policy is
-        // to simply to discard the data and start over
         noteDB.execSQL(NoteDAOImplSQLite.SQL_DELETE_ENTRIES);
         onCreate(noteDB);
     }

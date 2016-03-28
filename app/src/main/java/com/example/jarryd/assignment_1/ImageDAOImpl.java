@@ -13,6 +13,11 @@ import java.io.IOException;
 
 /**
  * Created by jarryd on 25/03/16.
+ * This is heavily based on the Android Training Guide at http://developer.android.com/training/displaying-bitmaps/process-bitmap.html#BitmapWorkerTaskUpdated
+ * Previously had a bespoke implementation that was far simpler but couldn't avoid ImageViews disappearing without handling recycling in exactly the suggested way.
+ * <p/>
+ * Implementation of Image Data Access Object Interface
+ * Defines methods for accessing notes in external storage and helper methods for image processing
  */
 public class ImageDAOImpl implements ImageDAO {
     public Context context;
@@ -22,18 +27,14 @@ public class ImageDAOImpl implements ImageDAO {
     }
 
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
 
         if (height > reqHeight || width > reqWidth) {
 
-            final int halfHeight = height / 2;            /////////////////////MUST  SIMPLIFY THIS IN SOME WAY
+            final int halfHeight = height / 2;
             final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
             while ((halfHeight / inSampleSize) > reqHeight
                     && (halfWidth / inSampleSize) > reqWidth) {
                 inSampleSize *= 2;
@@ -42,26 +43,6 @@ public class ImageDAOImpl implements ImageDAO {
         return inSampleSize;
     }
 
-//    @Override
-//    public void saveNoteImageToFile(Context context, Note note) {
-//        // THis is about the CAMERA
-//    }
-
-    public static Bitmap decodeSampledBitmapFromResource(int resId, Context context,
-                                                         int reqWidth, int reqHeight) {
-
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(context.getResources(), resId, options);
-
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(context.getResources(), resId, options);
-    }
 
     @Override
     //Implements getNoteImageFromFile by retrieving a sampled bitmap of the required width and height
@@ -71,7 +52,6 @@ public class ImageDAOImpl implements ImageDAO {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(imageFilePath, options);
-        System.out.println("imageFilepath passed to BitMapFactory.decodeFile is: " + imageFilePath + "______________________");
 
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, req_height, req_width);
@@ -90,9 +70,7 @@ public class ImageDAOImpl implements ImageDAO {
     public Intent createImageCaptureIntent(Note note) {
         Intent imageCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (imageCaptureIntent.resolveActivity(context.getPackageManager()) != null) {
-            // Create the File where the photo should go
             File imageFile = createFileForNoteImage(note);
-            // Continue only if the File was successfully created
             if (imageFile != null) {
                 imageCaptureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
             }

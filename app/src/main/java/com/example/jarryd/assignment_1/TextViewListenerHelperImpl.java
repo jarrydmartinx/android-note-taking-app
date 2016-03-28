@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 /**
  * Created by jarryd on 28/03/16.
+ * <p/>
+ * Implements the custom interface to set the various Listeners for certain events affecting EditText Views
+ * (avoids code duplication)
  */
 
 public class TextViewListenerHelperImpl implements TextViewListenerHelper {
