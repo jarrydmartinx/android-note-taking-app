@@ -1,69 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:id="@+id/notePreviewRelLayout"
-        android:descendantFocusability="blocksDescendants"
-        android:background="@android:drawable/dialog_holo_light_frame"
-    >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notePreviewRelLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:drawable/dialog_holo_light_frame"
+    android:descendantFocusability="blocksDescendants">
 
-        <TextView
-            xmlns:android=
-                "http://schemas.android.com/apk/res/android"
-            android:id="@+id/noteTitleView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textAppearance=
-                "?android:attr/textAppearanceSmall"
-            android:gravity="center_vertical"
-            android:lines="2"
-            android:textColor= "@color/navy"
-            android:textStyle="bold"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="0dp"
-            android:background="@color/lavender"
-            android:layout_alignParentTop="true"
-            android:ellipsize="start"
-            android:scrollHorizontally="false"
-            >
-        </TextView>
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/noteTitleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:background="@color/lavender"
+        android:ellipsize="start"
+        android:gravity="center_vertical"
+        android:lines="2"
+        android:paddingBottom="0dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:scrollHorizontally="false"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/navy"
+        android:textStyle="bold"></TextView>
 
-        <com.example.jarryd.assignment_1.MyImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/noteImageView"
-            android:visibility="visible"
-            android:paddingTop="5dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft ="10dp"
-            android:paddingRight = "10dp"
-            android:background="@color/lavender"
-            android:adjustViewBounds="true"
-            android:layout_below="@+id/noteTitleView"
-            android:layout_above="@+id/noteTextView"
-            android:layout_alignWithParentIfMissing="true"
-            android:layout_centerInParent="false"
-            >
-        </com.example.jarryd.assignment_1.MyImageView>
+    <com.example.jarryd.assignment_1.MyImageView
+        android:id="@+id/noteImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/noteTextView"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@+id/noteTitleView"
+        android:layout_centerInParent="false"
+        android:adjustViewBounds="true"
+        android:background="@color/lavender"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:visibility="visible"></com.example.jarryd.assignment_1.MyImageView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/lavender"
-            android:id="@+id/noteTextView"
-            android:paddingBottom="10dp"
-            android:paddingLeft ="10dp"
-            android:paddingRight = "10dp"
-            android:paddingTop = "5dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerInParent="false"
-            android:ellipsize="start"
-            android:scrollHorizontally="false"
-            >
+    <TextView
+        android:id="@+id/noteTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="false"
+        android:background="@color/lavender"
+        android:ellipsize="start"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:scrollHorizontally="false">
 
-        </TextView>
+    </TextView>
 
-        </RelativeLayout>
+</RelativeLayout>

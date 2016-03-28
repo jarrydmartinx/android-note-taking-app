@@ -21,36 +21,6 @@ public class ImageDAOImpl implements ImageDAO {
         this.context = context;
     }
 
-    @Override
-    //Implements getNoteImageFromFile by retrieving a sampled bitmap of the required width and height
-    public Bitmap getNoteImageFromFile(String image_id, int req_height, int req_width) {
-        String imageFilePath = image_id;
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(imageFilePath, options);
-        System.out.println("imageFilepath passed to BitMapFactory.decodeFile is: "+ imageFilePath +"______________________");
-
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, req_height, req_width);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(imageFilePath, options);
-    }
-
-//    @Override
-//    public void saveNoteImageToFile(Context context, Note note) {
-//        // THis is about the CAMERA
-//    }
-
-    @Override
-    public void deleteNoteImageFromFile(Note aNote) {
-        File fileToDelete = new File(aNote.getImage_id());
-        fileToDelete.delete();
-    }
-
-
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
@@ -72,6 +42,11 @@ public class ImageDAOImpl implements ImageDAO {
         return inSampleSize;
     }
 
+//    @Override
+//    public void saveNoteImageToFile(Context context, Note note) {
+//        // THis is about the CAMERA
+//    }
+
     public static Bitmap decodeSampledBitmapFromResource(int resId, Context context,
                                                          int reqWidth, int reqHeight) {
 
@@ -88,7 +63,31 @@ public class ImageDAOImpl implements ImageDAO {
         return BitmapFactory.decodeResource(context.getResources(), resId, options);
     }
 
-    public Intent createImageCaptureIntent(Note note){
+    @Override
+    //Implements getNoteImageFromFile by retrieving a sampled bitmap of the required width and height
+    public Bitmap getNoteImageFromFile(String image_id, int req_height, int req_width) {
+        String imageFilePath = image_id;
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imageFilePath, options);
+        System.out.println("imageFilepath passed to BitMapFactory.decodeFile is: " + imageFilePath + "______________________");
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, req_height, req_width);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(imageFilePath, options);
+    }
+
+    @Override
+    public void deleteNoteImageFromFile(Note aNote) {
+        File fileToDelete = new File(aNote.getImage_id());
+        fileToDelete.delete();
+    }
+
+    public Intent createImageCaptureIntent(Note note) {
         Intent imageCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (imageCaptureIntent.resolveActivity(context.getPackageManager()) != null) {
             // Create the File where the photo should go
@@ -102,7 +101,7 @@ public class ImageDAOImpl implements ImageDAO {
         return null;
     }
 
-    private File createFileForNoteImage(Note aNote){
+    private File createFileForNoteImage(Note aNote) {
         // Create an image file name
         String imageFileName = ("JPEG_" + aNote.getNote_id() + "_");
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
@@ -112,7 +111,7 @@ public class ImageDAOImpl implements ImageDAO {
             System.out.println("absolute path is : " + imageFile.getAbsolutePath());
             System.out.println("image id is:    " + aNote.getImage_id());
             return imageFile;
-        } catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;

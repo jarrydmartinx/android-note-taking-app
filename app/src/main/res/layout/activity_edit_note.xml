@@ -64,7 +64,7 @@
             android:focusable="true"
             android:textStyle="bold"
             android:typeface="serif"
-            android:textColor= "@color/navy"
+            android:textColor="@color/navy"
             android:padding="10dp"
             android:minLines="2"
             android:hint="Note Title"

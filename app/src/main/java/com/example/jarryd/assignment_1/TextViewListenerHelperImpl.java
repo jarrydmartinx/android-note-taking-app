@@ -1,6 +1,5 @@
 package com.example.jarryd.assignment_1;
 
-import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -12,7 +11,7 @@ import android.widget.TextView;
  * Created by jarryd on 28/03/16.
  */
 
-public class TextViewListenerHelperImpl implements TextViewListenerHelper{
+public class TextViewListenerHelperImpl implements TextViewListenerHelper {
     public InputMethodManager inputMethodManager;
 
     public TextViewListenerHelperImpl(InputMethodManager inputMethodManager) {
@@ -21,7 +20,7 @@ public class TextViewListenerHelperImpl implements TextViewListenerHelper{
 
 
     @Override
-    public void setListenersForEditText(EditText editText){
+    public void setListenersForEditText(EditText editText) {
         setOnClickListenerForEditText(editText);
         setOnChangeFocusListenerForEditText(editText);
         setOnEditorActionListenerForEditText(editText);

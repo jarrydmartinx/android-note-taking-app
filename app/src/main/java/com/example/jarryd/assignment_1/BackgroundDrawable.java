@@ -8,7 +8,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * Created by jarryd on 22/03/16.
- *
+ * <p/>
  * http://developer.android.com/training/displaying-bitmaps/process-bitmap.html#BitmapWorkerTaskUpdated
  */
 public class BackgroundDrawable extends BitmapDrawable {

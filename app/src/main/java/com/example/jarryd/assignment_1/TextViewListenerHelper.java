@@ -1,10 +1,5 @@
 package com.example.jarryd.assignment_1;
 
-import android.renderscript.ScriptGroup;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 

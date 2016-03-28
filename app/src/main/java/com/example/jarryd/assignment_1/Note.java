@@ -1,18 +1,8 @@
 package com.example.jarryd.assignment_1;
 
-import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,73 +17,73 @@ public class Note {
     public String note_text;
     public String note_title;
 
-        /* Constructor for new note */
-        public Note(){
-            super();
-            note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
-            image_id = null;
-            note_text = null;
-            note_title = null;
-        }
+    /* Constructor for new note */
+    public Note() {
+        super();
+        note_id = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date());
+        image_id = null;
+        note_text = null;
+        note_title = null;
+    }
 
-        /* Constructor for existing note read from DB */
-        public Note(String note_id, String image_id, String note_title, String note_text) {
-                super();
-                this.note_id = note_id;
-                this.image_id = image_id;
-                this.note_text = note_text;
-                this.note_title = note_title;
-        }
+    /* Constructor for existing note read from DB */
+    public Note(String note_id, String image_id, String note_title, String note_text) {
+        super();
+        this.note_id = note_id;
+        this.image_id = image_id;
+        this.note_text = note_text;
+        this.note_title = note_title;
+    }
 
-        public String getNoteHead() {
-            int head_length;
-            if (this.image_id == null){
-                head_length = 80; //MAGIC NUMBERZZZZZZZZZZZZZZZZZZZZZZZZZ
-            } else head_length = 30; //MAGIC NUMBERZZZZZZZZZZZZZZZZZZZZZZZZZ
-            System.out.println("############### NOTE TEXT IS: " + note_text);
-            return note_text.substring(0, Math.min(note_text.length(),head_length))+"...";
-        }
+    public String getNoteHead() {
+        int head_length;
+        if (this.image_id == null) {
+            head_length = 80; //MAGIC NUMBERZZZZZZZZZZZZZZZZZZZZZZZZZ
+        } else head_length = 30; //MAGIC NUMBERZZZZZZZZZZZZZZZZZZZZZZZZZ
+        System.out.println("############### NOTE TEXT IS: " + note_text);
+        return note_text.substring(0, Math.min(note_text.length(), head_length)) + "...";
+    }
 
-        public String getNote_id(){
-            return note_id;
-        }
+    public String getNote_id() {
+        return note_id;
+    }
 
-        public String getImage_id(){
-            return image_id;
-        }
+    public void setNote_id(String note_id) {
+        this.note_id = note_id;
+    }
 
-        public String getNote_text(){
-            return note_text;
-        }
+    public String getImage_id() {
+        return image_id;
+    }
 
-    public String getNote_title(){
+    public void setImage_id(String image_id) {
+        this.image_id = image_id;
+    }
+
+    public String getNote_text() {
+        return note_text;
+    }
+
+    public void setNote_text(String note_text) {
+        this.note_text = note_text;
+    }
+
+    public String getNote_title() {
         return note_title;
     }
 
-        public void setNote_id(String note_id) {
-            this.note_id = note_id;
-        }
+    public void setNote_title(String note_title) {
+        this.note_title = note_title;
+    }
 
-        public void setImage_id(String image_id) {
-            this.image_id = image_id;
-        }
+    public void setAllNoteAttributes(String note_id, String image_id, String note_text, String note_head) {
+        this.note_id = note_id;
+        this.image_id = image_id;
+        this.note_text = note_text;
+        this.note_title = note_title;
+    }
 
-        public void setNote_text(String note_text) {
-            this.note_text = note_text;
-        }
-
-        public void setNote_title(String note_title){
-            this.note_title = note_title;
-        }
-
-        public void setAllNoteAttributes(String note_id, String image_id, String note_text, String note_head){
-            this.note_id = note_id;
-            this.image_id = image_id;
-            this.note_text = note_text;
-            this.note_title = note_title;
-        }
-
-    public Intent createShareNoteIntent(){
+    public Intent createShareNoteIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("*/*");
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, note_title);
@@ -102,7 +92,7 @@ public class Note {
         if (image_id != null) {
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(image_id));
         }
-    return shareIntent;
+        return shareIntent;
     }
 
 }

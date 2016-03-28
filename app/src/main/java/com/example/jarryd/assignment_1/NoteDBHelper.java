@@ -8,10 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by jarryd on 26/03/16.
  */
 public class NoteDBHelper extends SQLiteOpenHelper {
-    private static NoteDBHelper noteDBInstance;
-
     private static final String DB_NAME = "Notes.db";
     private static final int DB_VERSION = 1;
+    private static NoteDBHelper noteDBInstance;
 
     //Constructor is private to prevent direct instantiations of the database
     private NoteDBHelper(Context context) {
@@ -30,6 +29,7 @@ public class NoteDBHelper extends SQLiteOpenHelper {
         noteDB.execSQL(NoteDAOImplSQLite.SQL_CREATE_ENTRIES);
         System.out.println("__________________________DATABASE CREATED______________________________________");
     }
+
     @Override
     public void onUpgrade(SQLiteDatabase noteDB, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is

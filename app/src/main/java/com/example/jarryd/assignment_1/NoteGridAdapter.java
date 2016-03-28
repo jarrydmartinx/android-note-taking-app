@@ -3,18 +3,14 @@ package com.example.jarryd.assignment_1;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
-import android.text.Layout;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,23 +19,16 @@ import java.util.ArrayList;
 /**
  * Created by jarryd on 21/03/16.
  */
-     public class NoteGridAdapter extends ArrayAdapter<Note> {
+public class NoteGridAdapter extends ArrayAdapter<Note> {
 
-    private ArrayList<Note> noteArray;
-    public ArrayList<Note> checkedNotes;
     private final Context context;
+    public ArrayList<Note> checkedNotes;
+    private ArrayList<Note> noteArray;
     private Resources res;
     private int layout_id;
     private Display display;
     private DisplayMetrics metrics;
 
-
-    private static class ViewHolder {
-        protected TextView titleView;
-        protected TextView textView;
-        protected MyImageView imageView;
-        private String imageId;
-    }
 
     public NoteGridAdapter(Context context, int layout_id, ArrayList<Note> noteArray, Display display) {
         super(context, layout_id, noteArray);
@@ -48,7 +37,7 @@ import java.util.ArrayList;
         this.noteArray = noteArray;
         this.display = display;
         res = context.getResources();
-        checkedNotes= null;
+        checkedNotes = null;
 
     }
 
@@ -87,7 +76,7 @@ import java.util.ArrayList;
             holder = (ViewHolder) notePreview.getTag();
         }
 
-        if(note.getImage_id()==null) {
+        if (note.getImage_id() == null) {
             holder.textView.setVisibility(View.VISIBLE);
             holder.textView.setHeight(metrics.widthPixels / 4);
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.textView.getLayoutParams();
@@ -108,36 +97,35 @@ import java.util.ArrayList;
             if (!newViewFlag) {
                 holder.imageView.setImageDrawable(null);
             }
-        }
-        else {
+        } else {
             // If this Note has an image, only show the image and Note title in the preview (not the whole text)
             // (or if the title is empty, show head of the text in place of the title)
-                holder.textView.setVisibility(View.GONE);
-                holder.textView.setHeight(0);
-                holder.imageView.setMinimumHeight(metrics.widthPixels / 4);
+            holder.textView.setVisibility(View.GONE);
+            holder.textView.setHeight(0);
+            holder.imageView.setMinimumHeight(metrics.widthPixels / 4);
 
 
 //            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.textView.getLayoutParams();
 //            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,-1);
 //            holder.imageView.setLayoutParams(layoutParams);
 
-                if (getItem(index).getNote_title().isEmpty()) {
-                    holder.titleView.setText(note.getNoteHead());
-                } else {
-                    holder.titleView.setText(note.getNote_title());
-                }
+            if (getItem(index).getNote_title().isEmpty()) {
+                holder.titleView.setText(note.getNoteHead());
+            } else {
+                holder.titleView.setText(note.getNote_title());
+            }
 
             // If the ImageView in the ViewHolder isn't showing the right image for this Note, set the image from file
-                if (!holder.imageId.equals(note.getImage_id())) {
-                    //Set the minimum size of the imageView based on the Display Metrics of the screen
-                    //This size will be used by setBitmapViaBackgroundTask for decoding down the image
-                   // holder.imageView.setMinimumWidth(display, R.integer.IM_SCALE_FACTOR_GRID);
-                    System.out.println("________________###########DISPLAY WIDTH IS:  " + metrics.widthPixels + "_____________________##########################");
-                    holder.imageView.setBitmapViaBackgroundTask(context, note.getImage_id(), metrics.widthPixels, res.getInteger(R.integer.IM_SCALE_FACTOR_GRID));
-                }
+            if (!holder.imageId.equals(note.getImage_id())) {
+                //Set the minimum size of the imageView based on the Display Metrics of the screen
+                //This size will be used by setBitmapViaBackgroundTask for decoding down the image
+                // holder.imageView.setMinimumWidth(display, R.integer.IM_SCALE_FACTOR_GRID);
+                System.out.println("________________###########DISPLAY WIDTH IS:  " + metrics.widthPixels + "_____________________##########################");
+                holder.imageView.setBitmapViaBackgroundTask(context, note.getImage_id(), metrics.widthPixels, res.getInteger(R.integer.IM_SCALE_FACTOR_GRID));
+            }
         }
 
-        if(checkedNotes != null) {
+        if (checkedNotes != null) {
             if (checkedNotes.contains(getItem(index))) {
                 notePreview.setBackgroundColor(ContextCompat.getColor(context, R.color.orangered));
             } else {
@@ -156,6 +144,13 @@ import java.util.ArrayList;
                 checkedNotes.add(noteArray.get(i));
             }
         }
+    }
+
+    private static class ViewHolder {
+        protected TextView titleView;
+        protected TextView textView;
+        protected MyImageView imageView;
+        private String imageId;
     }
 
 }
