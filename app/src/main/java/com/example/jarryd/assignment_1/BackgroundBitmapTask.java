@@ -29,16 +29,18 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
         private int reqHeight;
         private int reqWidth;
 
-        public BackgroundBitmapTask(Context context, MyImageView noteImageView, String image_id) {
+        public BackgroundBitmapTask(Context context, MyImageView noteImageView, String image_id, int defaultDim) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             this.image_id = image_id;
             this.context = context;
             noteImageViewRef = new WeakReference<>(noteImageView);
             imageDAO = new ImageDAOImpl(context);
+            reqWidth = defaultDim;
+            reqHeight = defaultDim;
+            //Sets the desired dimensions of the Bitmap to be returned by the AsyncTask.
+            // If the ImageView has not been drawn yet a default value (relative to display size) is used
 
-            int dim = context.getResources().getInteger(R.integer.standard_image_dim);
-            reqHeight = Math.max(dim,noteImageView.getMeasuredWidth());
-            reqWidth = Math.max(dim,noteImageView.getMeasuredHeight());
+
         }
 
         // An AsyncTask method. Process the photo in a background thread rather than the UI thread
@@ -59,7 +61,6 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
                 final BackgroundBitmapTask bmpTask = getBackgroundBitmapTask(imageView);
                 if (this == bmpTask && imageView != null) {
                     imageView.setImageBitmap(photo);
-                    imageView.processFinished = true;
                 }
             }
         }

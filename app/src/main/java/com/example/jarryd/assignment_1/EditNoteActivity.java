@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.LabeledIntent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -22,6 +23,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuItemImpl;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,28 +43,32 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class EditNoteActivity extends AppCompatActivity {
-//    private final Context context = getApplicationContext();
 
-    /* Declare widget objects */
     Context context;
+    Resources res;
     Note note;
     NoteDAO noteDAO;
     ImageDAO imageDAO;
+
+    ShareActionProvider shareActionProvider;
+    Display display;
+    DisplayMetrics metrics = new DisplayMetrics();
+
+    //Declare Widget Objects
     EditText noteEditText;
     MyImageView noteImageView;
     EditText titleEditText;
-    ShareActionProvider shareActionProvider;
-    int layoutWidth;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
 
-
         context = getApplicationContext();
+        display = getWindowManager().getDefaultDisplay();
+        display.getMetrics(metrics);
+
+        res = getResources();
         noteDAO = new NoteDAOImplSQLite(context);
         imageDAO = new ImageDAOImpl(context);
 
@@ -69,10 +76,8 @@ public class EditNoteActivity extends AppCompatActivity {
         Intent editNoteIntent = getIntent();
         String received_note_id = editNoteIntent.getStringExtra(context.getString(R.string.selected_note_id));
 
-
         //Load note from Database
         note = noteDAO.loadNote(received_note_id);
-
 
     /* Instantiate widgets*/
         titleEditText = (EditText) findViewById(R.id.titleEditText);
@@ -81,10 +86,14 @@ public class EditNoteActivity extends AppCompatActivity {
 
         titleEditText.setText(note.note_title, TextView.BufferType.EDITABLE);
         noteEditText.setText(note.note_text, TextView.BufferType.EDITABLE);
+
+
         //here you're reloading the image afresh, that's fine
         if (note.getImage_id() != null) {
             noteImageView.setImageResource(android.R.drawable.dialog_holo_light_frame);
-            noteImageView.setBitmapViaBackgroundTask(context, note.image_id);
+
+
+            noteImageView.setBitmapViaBackgroundTask(context, note.image_id, metrics.widthPixels,res.getInteger(R.integer.IM_SCALE_FACTOR_EDIT));
             System.out.println("########ONCREATE EDITNOTEACTIVITY####REl Layout's PARENT IS   " + ((View) noteImageView.getParent()).getParent() + "   #######  width is :    " + noteImageView.getMeasuredWidth() +
                         "   height is :    " + noteImageView.getMeasuredHeight());
         }
@@ -234,7 +243,7 @@ public class EditNoteActivity extends AppCompatActivity {
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 getString(R.string.begin_speech));
         try {
-            startActivityForResult(speechRecognizerIntent, getResources().getInteger(R.integer.REQUEST_VOICE_INPUT));
+            startActivityForResult(speechRecognizerIntent, res.getInteger(R.integer.REQUEST_VOICE_INPUT));
         } catch (ActivityNotFoundException a) {
             Snackbar speechSnackbar = Snackbar.make(noteEditText, "Speech Input is not available on your device", Snackbar.LENGTH_LONG);
             speechSnackbar.show();
@@ -246,7 +255,7 @@ public class EditNoteActivity extends AppCompatActivity {
     }
 
     private void dispatchImageCaptureIntent(Note note){
-        startActivityForResult(imageDAO.createImageCaptureIntent(note), getResources().getInteger(R.integer.REQUEST_IMAGE_CAPTURE));
+        startActivityForResult(imageDAO.createImageCaptureIntent(note), res.getInteger(R.integer.REQUEST_IMAGE_CAPTURE));
     }
 
     @Override
@@ -255,17 +264,18 @@ public class EditNoteActivity extends AppCompatActivity {
         /**
          * Receives the transcribed string from the Voice Input
          * */
-        if (requestCode == getResources().getInteger(R.integer.REQUEST_VOICE_INPUT) && resultCode == RESULT_OK && data != null) {
+        if (requestCode == res.getInteger(R.integer.REQUEST_VOICE_INPUT) && resultCode == RESULT_OK && data != null) {
             ArrayList<String> activityResult =
                     data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             noteEditText.append(activityResult.get(0));
             /**
              * Receiving the saved photo from the Hardware Camera
              * */
-        } else if (requestCode == getResources().getInteger(R.integer.REQUEST_IMAGE_CAPTURE) && resultCode == RESULT_OK) {
+        } else if (requestCode == res.getInteger(R.integer.REQUEST_IMAGE_CAPTURE) && resultCode == RESULT_OK) {
             System.out.println("imageID is " + note.getImage_id());
             noteImageView.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
-            noteImageView.setBitmapViaBackgroundTask(context, note.getImage_id());
+            display.getMetrics(metrics);
+            noteImageView.setBitmapViaBackgroundTask(context, note.getImage_id(), metrics.widthPixels, res.getInteger(R.integer.IM_SCALE_FACTOR_EDIT));
             System.out.println("###########ON RECEIVE FROM CAMERA########  width is :    " + noteImageView.getMeasuredWidth() +
                     "   height is :    " + noteImageView.getMeasuredHeight());
         }

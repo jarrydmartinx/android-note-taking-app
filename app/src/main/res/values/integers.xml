@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="standard_image_dim">200</integer>
+    <integer name="IM_SCALE_FACTOR_GRID">3</integer>
+    <integer name="IM_SCALE_FACTOR_EDIT">1</integer>
 </resources>
