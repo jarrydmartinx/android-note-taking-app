@@ -39,8 +39,6 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
             reqHeight = defaultDim;
             //Sets the desired dimensions of the Bitmap to be returned by the AsyncTask.
             // If the ImageView has not been drawn yet a default value (relative to display size) is used
-
-
         }
 
         // An AsyncTask method. Process the photo in a background thread rather than the UI thread

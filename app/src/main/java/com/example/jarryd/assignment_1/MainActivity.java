@@ -75,9 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
         /* Loads all Notes in DB into an ArrayList to back the NoteAdapter */
         this.noteArray = noteDAO.getAllSavedNotes();
-        for (Note aNote : noteArray) {
-            System.out.println(aNote.note_title);
-        }
 
         /* Listener for responding to user clicks on an individual note preview, launches EditNoteActivity */
         AdapterView.OnItemClickListener notePreviewClickedListener = new AdapterView.OnItemClickListener() {

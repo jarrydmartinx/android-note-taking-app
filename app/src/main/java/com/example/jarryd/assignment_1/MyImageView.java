@@ -42,7 +42,6 @@ public class MyImageView extends ImageView {
             public void setBitmapViaBackgroundTask(Context context, String image_id, int displayWidth, int scaleFactor) {
             if (cancelExistingBackgroundTask(this.getId(), this)) {
                 final BackgroundBitmapTask bgBmpTask = new BackgroundBitmapTask(context, this, image_id, (int)(displayWidth/scaleFactor));
-                System.out.println("########### display width is : "+displayWidth+"  scaleFactor is:  "+scaleFactor+ "quotient is:  " +displayWidth/scaleFactor);
                 final BackgroundDrawable bgDrawable = new BackgroundDrawable(getContext().getResources(), null, bgBmpTask);
                 /* Set the drawable object as the content of this imageView */
                 this.setImageDrawable(bgDrawable);
@@ -50,16 +49,6 @@ public class MyImageView extends ImageView {
                 bgBmpTask.execute(this.getId());
                 }
             }
-
-//    public void setMinimumWidth(Display display, int scaleFactor){
-//        DisplayMetrics metrics = new DisplayMetrics();
-//        display.getMetrics(metrics);
-//        this.minWidth = (metrics.widthPixels)/scaleFactor;
-//        setMinimumWidth(minWidth);
-//        System.out.println("________________###########DISPLAY WIDTH IS:  " + metrics.widthPixels + "_____________________##########################");
-//    }
-
-
 
 
 }
