@@ -14,6 +14,7 @@ import java.io.IOException;
 /**
  * Created by jarryd on 25/03/16.
  * This is heavily based on the Android Training Guide at http://developer.android.com/training/displaying-bitmaps/process-bitmap.html#BitmapWorkerTaskUpdated
+ * In particular calculateInSampleSize and getNoteImageFromFile are essentially borrowed from this source.
  * Previously had a bespoke implementation that was far simpler but couldn't avoid ImageViews disappearing without handling recycling in exactly the suggested way.
  * <p/>
  * Implementation of Image Data Access Object Interface

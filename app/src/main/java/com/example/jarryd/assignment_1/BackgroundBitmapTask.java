@@ -43,7 +43,7 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
      *                      the image with respect to
      */
     public BackgroundBitmapTask(Context context, MyImageView noteImageView, String image_id, int defaultDim) {
-        // Use a WeakReference to ensure the ImageView can be garbage collected
+
         this.image_id = image_id;
         this.context = context;
         noteImageViewRef = new WeakReference<>(noteImageView);
@@ -82,16 +82,12 @@ public class BackgroundBitmapTask extends AsyncTask<Integer, Void, Bitmap> {
 
         if (bmpTask != null) {
             final int bitmapData = bmpTask.data;
-            // If bitmapData is not yet set or it differs from the new data
             if (bitmapData == 0 || bitmapData != data) {
-                // Cancel previous task
                 bmpTask.cancel(true);
             } else {
-                // The same work is already in progress
                 return false;
             }
         }
-        // No task associated with the ImageView, or an existing task was cancelled
         return true;
     }
 

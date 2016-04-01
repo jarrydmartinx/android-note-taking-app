@@ -1,0 +1,44 @@
+@startuml
+
+
+interface NoteDAO
+interface ImageDAO
+
+
+
+List <|-- AbstractList
+Collection <|-- AbstractCollection
+
+Collection <|- List
+AbstractCollection <|- AbstractList
+AbstractList <|-- ArrayList
+
+class NoteDAOImplSQLite {
+}
+
+class ImageDAO{
+
+}
+
+class MainActivity{
+}
+
+class ArrayList<Note>{
+Note[]
+}
+
+class Note {
+String note_id
+String image_id
+String note_title
+String note_text
+
+}
+
+enum TimeUnit {
+DAYS
+HOURS
+MINUTES
+}
+
+@enduml
