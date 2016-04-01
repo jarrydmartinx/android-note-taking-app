@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
@@ -244,7 +245,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int item_id = item.getItemId();
-        return super.onOptionsItemSelected(item);
+        if (item_id == R.id.display_note_count) {
+            int noteCount = noteArray.size();
+            Snackbar noteCountSnackbar = Snackbar.make(noteGridView, "You have " + noteCount + " saved notes!", Snackbar.LENGTH_LONG);
+            noteCountSnackbar.show();
+            return true;
+        }
+        return false;
     }
 
 
